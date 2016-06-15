@@ -15,10 +15,12 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
     var window: UIWindow?
     var imageView = UIImageView()
     
+    @IBOutlet var userNameLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        let graphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name, gender"])
+        let graphRequest = FBSDKGraphRequest(graphPath: "me", parameters: ["fields": "id, name"])
         
         graphRequest.startWithCompletionHandler { (connection, result, error) -> Void in
             if error != nil {
@@ -27,11 +29,7 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
             }
                 
             else if let result = result {
-                PFUser.currentUser()?["gender"] = result["gender"]!
                 PFUser.currentUser()?["name"] = result["name"]!
-                
-               // self.nameLabel?.text = result["name"]! as? String
-                
                 PFUser.currentUser()?.saveInBackgroundWithBlock({ (result, error) -> Void in
                     if let error = error {
                         print(error)
@@ -52,6 +50,8 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
                         self.specifyImageView()
                         self.imageView.image = UIImage(data: data)
                         self.view.addSubview(self.imageView)
+                        //Set User Name
+                        self.userNameLabel.text = result["name"]! as? String
                         
                         let imageFile: PFFile = PFFile(data: data)!
                         
@@ -68,9 +68,7 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
     
     
     @IBAction func continueButtonPressed(sender: AnyObject) {
-        
-        
-        
+
         // Create a ContainerViewController object and store its object reference into the local variable containerViewController.
         let containerViewController = ContainerViewController()
         
@@ -93,6 +91,9 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
         imageView.layer.cornerRadius = self.imageView.frame.size.width / 2
         imageView.clipsToBounds = true
         imageView.contentMode = UIViewContentMode.ScaleAspectFill
+        
+        
+        
     }
     
     func imageTapped(gesture: UIGestureRecognizer) {
@@ -124,10 +125,7 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
         //Done with photo picking
         dismissViewControllerAnimated(true, completion: nil)
         
-        
-        
-        
-        
+   
     }
     
     

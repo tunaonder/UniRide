@@ -68,13 +68,54 @@
                                     <action selector="continueButtonPressed:" destination="anA-On-v02" eventType="touchUpInside" id="mCk-6z-WJB"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xb2-tx-d5Q">
+                                <rect key="frame" x="20" y="260" width="335" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="oli-f3-Daa"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="Welcome">
+                                        <attributes>
+                                            <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <font key="NSFont" size="27" name="BodoniSvtyTwoSCITCTT-Book"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nVI-yX-mI7">
+                                <rect key="frame" x="20" y="293" width="335" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="kKX-si-bVE"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="New User">
+                                        <attributes>
+                                            <color key="NSColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <font key="NSFont" size="27" name="BodoniSvtyTwoSCITCTT-Book"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="xb2-tx-d5Q" firstAttribute="top" secondItem="JZ8-lY-iXa" secondAttribute="bottom" constant="240" id="2ny-AT-OnY"/>
+                            <constraint firstItem="nVI-yX-mI7" firstAttribute="leading" secondItem="o3t-vY-ksw" secondAttribute="leading" constant="20" id="AGi-WI-dpa"/>
+                            <constraint firstAttribute="trailing" secondItem="xb2-tx-d5Q" secondAttribute="trailing" constant="20" id="DIs-z8-kA9"/>
+                            <constraint firstItem="xb2-tx-d5Q" firstAttribute="leading" secondItem="o3t-vY-ksw" secondAttribute="leading" constant="20" id="QE6-oW-LAO"/>
+                            <constraint firstAttribute="trailing" secondItem="nVI-yX-mI7" secondAttribute="trailing" constant="20" id="RlZ-WR-7bx"/>
                             <constraint firstItem="Efq-6y-M04" firstAttribute="centerX" secondItem="o3t-vY-ksw" secondAttribute="centerX" id="kti-pw-sHu"/>
                             <constraint firstItem="vGd-Ct-BuW" firstAttribute="top" secondItem="Efq-6y-M04" secondAttribute="bottom" constant="60" id="mLq-5E-sIo"/>
+                            <constraint firstItem="nVI-yX-mI7" firstAttribute="top" secondItem="xb2-tx-d5Q" secondAttribute="bottom" constant="12" id="nVi-2X-NGc"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="userNameLabel" destination="nVI-yX-mI7" id="cpD-cH-hl9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="acU-Gs-3qa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
