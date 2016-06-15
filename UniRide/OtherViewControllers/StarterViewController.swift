@@ -23,12 +23,21 @@ class StarterViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
+        
         if (PFUser.currentUser()?.username) != nil {
-            // Create a ContainerViewController object and store its object reference into the local variable containerViewController.
-            let containerViewController = ContainerViewController()
+           
             
-            //Display ContainerViewController with Animation
-            Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
+            PFUser.currentUser()!.fetchInBackgroundWithBlock({ (currentUser: PFObject?, error: NSError?) -> Void in
+               
+                if (currentUser as? PFUser) != nil {
+                    // Create a ContainerViewController object and store its object reference into the local variable containerViewController.
+                    let containerViewController = ContainerViewController()
+                    
+                    //Display ContainerViewController with Animation
+                    Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
+                }
+            })
+          
        
         }
         else {
