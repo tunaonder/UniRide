@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import GoogleMaps
 
 class CarInformationViewController: UIViewController {
     
@@ -36,6 +37,7 @@ class CarInformationViewController: UIViewController {
     }
     
     @IBAction func cancelButtonPressed(sender: AnyObject) {
+        
         //Back Button Pressed:
         //self.navigationController?.popViewControllerAnimated(true)
     }
@@ -51,3 +53,28 @@ class CarInformationViewController: UIViewController {
      */
     
 }
+
+extension ViewController: GMSAutocompleteViewControllerDelegate {
+    
+    // Handle the user's selection.
+    func viewController(viewController: GMSAutocompleteViewController!, didAutocompleteWithPlace place: GMSPlace!) {
+        print("Place name: \(place.name)")
+        print("Place address: \(place.formattedAddress)")
+        print("Place attributions: \(place.attributions)")
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func viewController(viewController: GMSAutocompleteViewController!, didFailAutocompleteWithError error: NSError!) {
+        // TODO: handle the error.
+        print("Error: \(error.description)")
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // User canceled the operation.
+    func wasCancelled(viewController: GMSAutocompleteViewController!) {
+        print("Autocomplete was cancelled.")
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+
