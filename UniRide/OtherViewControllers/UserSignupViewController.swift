@@ -80,7 +80,7 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
         let screenSize: CGRect = UIScreen.mainScreen().bounds
         let screenWidth = screenSize.width
         imageView = UIImageView(frame: CGRectMake(screenWidth/2-100, 50, 200, 200))
-        let tapGesture = UITapGestureRecognizer(target: self, action: "imageTapped:")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(UserSignUpViewController.imageTapped(_:)))
         
         // add it to the image view;
         imageView.addGestureRecognizer(tapGesture)
@@ -98,7 +98,7 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
     
     func imageTapped(gesture: UIGestureRecognizer) {
         // if the tapped view is a UIImageView then set it to imageview
-        if let imageView = gesture.view as? UIImageView {
+        if (gesture.view as? UIImageView) != nil {
             
             //Here you can initiate your new ViewController
             

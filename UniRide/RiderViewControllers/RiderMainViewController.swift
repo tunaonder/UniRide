@@ -25,6 +25,7 @@ enum RiderState {
 
 class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSMapViewDelegate {
     
+   
     /*
      This instance variable designates the object that adopts the RiderMainViewControllerDelegate protocol.
      ContainerViewController adopts this protocol and implements its two optional methods (see its code).
@@ -36,33 +37,43 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     //Google Maps View
     var mapView = GMSMapView()
     
-    //Current Location Coordinates
-    var long: Double = 0
-    var lat: Double = 0
-    
-    //
-    var markerLat: Double = 0
-    var markerLong: Double = 0
+
+    //Set Rider State
+    var riderState: RiderState = .setPickupState
     
     var camera: GMSCameraPosition?
     
-    var centerImage: UIImageView?
-    
-    //Set Rider State
-    var riderState: RiderState = .setPickupState
+    var centerImage: UIImageView!
+    var riderLabel: UILabel!
+    var lessRiderButton: UIButton!
+    var moreRiderButton: UIButton!
+    var riderCountDisplayLabel: UILabel!
     
     @IBOutlet var bottomButton: UIButton!
     var anotherDestButton: UIButton!
     var cancelRideButton: UIButton!
+    
     
     //Get the screen size of the device
     let screenSize: CGRect = UIScreen.mainScreen().bounds
     
     var startMarker: GMSMarker!
     
+    
+    //Current Location Coordinates
+    var long: Double = 0
+    var lat: Double = 0
+    var markerLat: Double = 0
+    var markerLong: Double = 0
+    
+    //
+    var numberOfRiders: Int = 1
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initializeViewComponents()
         
         //Set rider state
         riderState = .setPickupState
@@ -84,13 +95,15 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             lat = location.coordinate.latitude
             
             mapLocationLoad()
+            
+            
         }
         
         // Do any additional setup after loading the view.
         
         
         
-        initializeViewComponents()
+       
         
         
         
@@ -128,6 +141,9 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         anotherDestButton.hidden = true
         cancelRideButton.hidden = true
+        
+      
+        
     }
     
     
@@ -166,17 +182,57 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         //Total on the top: 64 px
         //Total on the bottom: 50px. Therefore image should be moved to top 7 px extra.
         //If Nav Bar is not transparent
-        //centerImage!.frame = CGRect(x: screenSize.width/2-20, y: screenSize.height/2-27, width: 40, height: 40)
+        //centerImage.frame = CGRect(x: screenSize.width/2-20, y: screenSize.height/2-27, width: 40, height: 40)
         
-        centerImage!.frame = CGRect(x: screenSize.width/2-20, y: (screenSize.height-50)/2-40, width: 40, height: 40)
+        centerImage.frame = CGRect(x: screenSize.width/2-20, y: (screenSize.height-50)/2-40, width: 40, height: 40)
         
         
         
         
         self.view.addSubview(mapView)
-        self.view.addSubview(centerImage!)
+        self.view.insertSubview(centerImage, aboveSubview: mapView)
+        
+
+        //Initialize On Map components after the mapview is loaded
+        initializeOnMapComponents()
         
         
+        
+        
+    }
+    
+    func initializeOnMapComponents(){
+        riderLabel = UILabel()
+        riderLabel.text = "Number of Riders: "
+        riderLabel.font = UIFont(name: "Georgia", size: 17)
+        riderLabel.frame = CGRect(x: 6, y: screenSize.height-100, width: 150, height: 21)
+        self.view.insertSubview(riderLabel, aboveSubview: mapView)
+        
+        
+        lessRiderButton = UIButton(frame: CGRectMake(160,screenSize.height-101,25,25))
+        lessRiderButton.setTitle("-", forState: .Normal)
+        lessRiderButton.backgroundColor = UIColor.blackColor()
+        lessRiderButton.layer.cornerRadius = 0.5 * (lessRiderButton?.bounds.size.width)!
+       // lessRiderButton!.setImage(UIImage(named:"start-icon.png"), forState: .Normal)
+        lessRiderButton.addTarget(self, action: #selector(lessRiderButtonPressed), forControlEvents: .TouchUpInside)
+        lessRiderButton.clipsToBounds = true
+        self.view.insertSubview(lessRiderButton, aboveSubview: mapView)
+        
+        
+        riderCountDisplayLabel = UILabel()
+        riderCountDisplayLabel.text = "\(numberOfRiders)"
+        riderCountDisplayLabel.font = UIFont(name: "Georgia", size: 26)
+        riderCountDisplayLabel.frame = CGRect(x: 205, y: screenSize.height-105, width: 21, height: 28)
+        self.view.insertSubview(riderCountDisplayLabel, aboveSubview: mapView)
+        
+        moreRiderButton = UIButton(frame: CGRectMake(240,screenSize.height-101,25,25))
+        moreRiderButton.setTitle("+", forState: .Normal)
+        moreRiderButton.backgroundColor = UIColor.blackColor()
+        moreRiderButton.layer.cornerRadius = 0.5 * (moreRiderButton?.bounds.size.width)!
+        // lessRiderButton!.setImage(UIImage(named:"start-icon.png"), forState: .Normal)
+        moreRiderButton.addTarget(self, action: #selector(moreRiderButtonPressed), forControlEvents: .TouchUpInside)
+        moreRiderButton.clipsToBounds = true
+        self.view.insertSubview(moreRiderButton, aboveSubview: mapView)
     }
     
     //When this view is displayed first time ever, user has to allow location manager to use the real location
@@ -232,7 +288,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         switch (riderState) {
         case .setPickupState:
-            bottomButton.backgroundColor = UIColor.redColor()
+            //bottomButton.backgroundColor = UIColor.redColor()
             bottomButton.setTitle("SET DESTINATION & GO!", forState: .Normal)
             
             let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
@@ -244,7 +300,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             // let position2 = CLLocationCoordinate2D(latitude: lat, longitude: long)
             //  mapView.animateWithCameraUpdate(GMSCameraUpdate.setTarget(position2))
             
-            centerImage?.image = UIImage(named: "destination-icon")
+            centerImage.image = UIImage(named: "destination-icon")
             // centerImageForDest?.hidden = false
             
             //Change the State
@@ -282,10 +338,26 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         anotherDestButton.hidden = true
         cancelRideButton.hidden = true
         
-        centerImage?.image = UIImage(named: "start-icon")
+        centerImage.image = UIImage(named: "start-icon")
         
         //Change the state
         riderState = .setPickupState
+    }
+    
+    func lessRiderButtonPressed(){
+        if numberOfRiders > 1{
+            numberOfRiders -= 1
+        }
+        riderCountDisplayLabel.text = "\(numberOfRiders)"
+        
+    }
+    
+    func moreRiderButtonPressed(){
+        if numberOfRiders < 4 {
+            numberOfRiders += 1
+        }
+        riderCountDisplayLabel.text = "\(numberOfRiders)"
+        
     }
     
     

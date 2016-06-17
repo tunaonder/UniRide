@@ -85,7 +85,7 @@ class DriverContainerViewController: UIViewController,DriverMainViewControllerDe
          Create a UIPanGestureRecognizer object, which will call the handlePanGesture: method when the user pans (drags or slides)
          the driverMainNavigationController object. Store its object reference into local variable panGestureRecognizer.
          */
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "handlePanGesture:")
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(DriverContainerViewController.handlePanGesture(_:)))
         
         // Attach the pan gesture recognizer object to the driverMainNavigationController object.
         driverMainNavigationController.view.addGestureRecognizer(panGestureRecognizer)

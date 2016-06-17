@@ -22,6 +22,12 @@ class StarterViewController: UIViewController {
     }
     
     override func viewDidAppear(animated: Bool) {
+        //temp
+     //   let containerViewController = ContainerViewController()
+        
+        //Display ContainerViewController with Animation
+     //   Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
+        
         
         if (PFUser.currentUser()?.username) != nil {
             

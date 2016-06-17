@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UniRide/RiderViewControllers/RiderMainViewController.swift"
-            timestampString = "487607948.051232"
+            timestampString = "487866471.25507"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "406"
-            endingLineNumber = "406">
+            startingLineNumber = "478"
+            endingLineNumber = "478">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -40,13 +40,61 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UniRide/OtherViewControllers/StarterViewController.swift"
-            timestampString = "487720107.121903"
+            timestampString = "487857609.762021"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "25"
-            endingLineNumber = "25"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
             landmarkName = "viewDidAppear(_:)"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "UniRide/OtherViewControllers/UserSignupViewController.swift"
+            timestampString = "487867180.155686"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
+            landmarkName = "imageTapped(_:)"
+            landmarkType = "5">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UniRide.UserSignUpViewController.imageTapped (__ObjC.UIGestureRecognizer) -&gt; ()"
+                  moduleName = "UniRide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Onder/UniRide/UniRide/OtherViewControllers/UserSignupViewController.swift"
+                  timestampString = "487867180.525098"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "101"
+                  endingLineNumber = "101"
+                  offsetFromSymbolStart = "32">
+               </Location>
+               <Location
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "UniRide.UserSignUpViewController.imageTapped (__ObjC.UIGestureRecognizer) -&gt; ()"
+                  moduleName = "UniRide"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/Onder/UniRide/UniRide/OtherViewControllers/UserSignupViewController.swift"
+                  timestampString = "487867180.526271"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "101"
+                  endingLineNumber = "101"
+                  offsetFromSymbolStart = "208">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
