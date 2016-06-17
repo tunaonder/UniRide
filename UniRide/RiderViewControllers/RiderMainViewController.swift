@@ -48,6 +48,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var lessRiderButton: UIButton!
     var moreRiderButton: UIButton!
     var riderCountDisplayLabel: UILabel!
+    var addressTextField: UITextField!
     
     @IBOutlet var bottomButton: UIButton!
     var anotherDestButton: UIButton!
@@ -58,6 +59,8 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     let screenSize: CGRect = UIScreen.mainScreen().bounds
     
     var startMarker: GMSMarker!
+    
+    var timer: NSTimer!
     
     
     //Current Location Coordinates
@@ -233,6 +236,12 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         moreRiderButton.addTarget(self, action: #selector(moreRiderButtonPressed), forControlEvents: .TouchUpInside)
         moreRiderButton.clipsToBounds = true
         self.view.insertSubview(moreRiderButton, aboveSubview: mapView)
+        
+        addressTextField = UITextField()
+        addressTextField.frame = CGRect(x: 70, y: 60, width: 250, height: 28)
+        addressTextField.backgroundColor = UIColor.whiteColor()
+        addressTextField.text = " " + AddressFinder().getAddressForLatLng("\(lat)", longitude: "\(long)")
+        self.view.insertSubview(addressTextField, aboveSubview: mapView)
     }
     
     //When this view is displayed first time ever, user has to allow location manager to use the real location
@@ -258,7 +267,13 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         // print("\(camera.target.latitude) \(camera.target.longitude)")
         markerLat = camera.target.latitude
         markerLong = camera.target.longitude
-        
+     
+    }
+    
+    //Update Address when Map becomes stable
+    func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
+        addressTextField.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
+
     }
     
     /*

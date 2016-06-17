@@ -33,6 +33,7 @@
 		B08E302B1D0705E100E99A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B08E302A1D0705E100E99A03 /* Assets.xcassets */; };
 		B08E302D1D071C4B00E99A03 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08E302C1D071C4B00E99A03 /* MenuViewController.swift */; };
 		B08E302F1D07223800E99A03 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08E302E1D07223800E99A03 /* ContainerViewController.swift */; };
+		B0A1EE751D14499E00A60BF1 /* AddressFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A1EE741D14499E00A60BF1 /* AddressFinder.swift */; };
 		B0B790E51D06CF6B00336CDA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B790E41D06CF6B00336CDA /* AppDelegate.swift */; };
 		B0B790EA1D06CF6B00336CDA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0B790E81D06CF6B00336CDA /* Main.storyboard */; };
 		B0B790EF1D06CF6B00336CDA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B0B790ED1D06CF6B00336CDA /* LaunchScreen.storyboard */; };
@@ -89,6 +90,7 @@
 		B08E302A1D0705E100E99A03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B08E302C1D071C4B00E99A03 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		B08E302E1D07223800E99A03 /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		B0A1EE741D14499E00A60BF1 /* AddressFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressFinder.swift; sourceTree = "<group>"; };
 		B0B790E11D06CF6B00336CDA /* UniRide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UniRide.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B0B790E41D06CF6B00336CDA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B0B790E91D06CF6B00336CDA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -228,6 +230,7 @@
 				B08E30161D06E35200E99A03 /* RiderViewControllers */,
 				B0F034061D087B1300702B55 /* DriverViewControllers */,
 				B0B790E41D06CF6B00336CDA /* AppDelegate.swift */,
+				B0A1EE741D14499E00A60BF1 /* AddressFinder.swift */,
 				B0F0340F1D089F0500702B55 /* Animate.swift */,
 				B0B790E81D06CF6B00336CDA /* Main.storyboard */,
 				B08E302A1D0705E100E99A03 /* Assets.xcassets */,
@@ -459,6 +462,7 @@
 				B0811D0B1D10522B002A3F42 /* StarterViewController.swift in Sources */,
 				B0B790E51D06CF6B00336CDA /* AppDelegate.swift in Sources */,
 				B0811D041D104F42002A3F42 /* DriverMainViewController.swift in Sources */,
+				B0A1EE751D14499E00A60BF1 /* AddressFinder.swift in Sources */,
 				B0811D091D10520C002A3F42 /* UserSignupViewController.swift in Sources */,
 				B0811CFE1D104E0D002A3F42 /* RiderMatchesViewController.swift in Sources */,
 				B0F034101D089F0500702B55 /* Animate.swift in Sources */,
