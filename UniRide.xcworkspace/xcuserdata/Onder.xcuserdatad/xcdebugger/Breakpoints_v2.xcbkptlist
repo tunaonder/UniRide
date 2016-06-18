@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UniRide/RiderViewControllers/RiderMainViewController.swift"
-            timestampString = "487942448.367216"
+            timestampString = "487951844.369278"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "548"
-            endingLineNumber = "548">
+            startingLineNumber = "557"
+            endingLineNumber = "557">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -95,6 +95,22 @@
                   offsetFromSymbolStart = "208">
                </Location>
             </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "UniRide/RiderViewControllers/RiderMainViewController.swift"
+            timestampString = "487951170.349377"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "265"
+            endingLineNumber = "265"
+            landmarkName = "initializeOnMapComponents()"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

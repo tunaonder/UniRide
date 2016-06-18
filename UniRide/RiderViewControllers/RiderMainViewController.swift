@@ -48,6 +48,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var lessRiderButton: UIButton!
     var moreRiderButton: UIButton!
     var riderCountDisplayLabel: UILabel!
+    var subView: UIView!
     
     @IBOutlet var bottomButton: UIButton!
     var anotherDestButton: UIButton!
@@ -74,12 +75,16 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     
     var resultsViewController: GMSAutocompleteResultsViewController?
-    var searchController: UISearchController?
+    var searchController: UISearchController!
     var resultView: UITextView?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+
+
+        
         
         initializeViewComponents()
         
@@ -250,21 +255,23 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         
         
+        
         resultsViewController = GMSAutocompleteResultsViewController()
         resultsViewController?.delegate = self
         
         searchController = UISearchController(searchResultsController: resultsViewController)
-        searchController?.searchResultsUpdater = resultsViewController
-       // searchController?.searchBar.searchBarStyle = .Default
-      //  searchController?.searchBar.barTintColor = UIColor.whiteColor()
+        searchController.loadViewIfNeeded()
+        searchController.searchResultsUpdater = resultsViewController
         
-        let subView = UIView(frame: CGRectMake(60, 60, screenSize.width-80, 40.0))
         
-        subView.addSubview((searchController?.searchBar)!)
-        self.view.addSubview(subView)
-       // self.view.insertSubview(subView, aboveSubview: mapView)
-        searchController?.searchBar.sizeToFit()
-        searchController?.hidesNavigationBarDuringPresentation = false
+        subView = UIView(frame: CGRectMake(60, 60, screenSize.width-80, 40.0))
+        
+        subView.addSubview(searchController.searchBar)
+        self.view.insertSubview(subView, aboveSubview: mapView)
+        searchController.searchBar.barTintColor = UIColor.whiteColor()
+        searchController.searchBar.searchBarStyle = .Minimal
+        searchController.searchBar.sizeToFit()
+        searchController.hidesNavigationBarDuringPresentation = false
         
         // When UISearchController presents the results view, present it in
         // this view controller, not one further up the chain.
@@ -402,6 +409,8 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
     }
     
+
+    
     
     
     
@@ -412,7 +421,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
 extension RiderMainViewController: GMSAutocompleteResultsViewControllerDelegate {
     func resultsController(resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWithPlace place: GMSPlace) {
-        searchController?.active = false
+        searchController.active = false
         // Do something with the selected place.
         print("Place name: ", place.name)
         print("Place address: ", place.formattedAddress)
