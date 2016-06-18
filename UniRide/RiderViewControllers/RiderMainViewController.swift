@@ -48,7 +48,6 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var lessRiderButton: UIButton!
     var moreRiderButton: UIButton!
     var riderCountDisplayLabel: UILabel!
-    var addressTextField: UITextField!
     
     @IBOutlet var bottomButton: UIButton!
     var anotherDestButton: UIButton!
@@ -71,6 +70,12 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     //
     var numberOfRiders: Int = 1
+    
+    
+    
+    var resultsViewController: GMSAutocompleteResultsViewController?
+    var searchController: UISearchController?
+    var resultView: UITextView?
     
     
     override func viewDidLoad() {
@@ -107,7 +112,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         
        
-        
+
         
         
         
@@ -237,11 +242,33 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         moreRiderButton.clipsToBounds = true
         self.view.insertSubview(moreRiderButton, aboveSubview: mapView)
         
-        addressTextField = UITextField()
+      /*  addressTextField = UITextField()
         addressTextField.frame = CGRect(x: 70, y: 60, width: 250, height: 28)
         addressTextField.backgroundColor = UIColor.whiteColor()
         addressTextField.text = " " + AddressFinder().getAddressForLatLng("\(lat)", longitude: "\(long)")
-        self.view.insertSubview(addressTextField, aboveSubview: mapView)
+        self.view.insertSubview(addressTextField, aboveSubview: mapView)*/
+        
+        
+        
+        resultsViewController = GMSAutocompleteResultsViewController()
+        resultsViewController?.delegate = self
+        
+        searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController?.searchResultsUpdater = resultsViewController
+       // searchController?.searchBar.searchBarStyle = .Default
+      //  searchController?.searchBar.barTintColor = UIColor.whiteColor()
+        
+        let subView = UIView(frame: CGRectMake(60, 60, screenSize.width-80, 40.0))
+        
+        subView.addSubview((searchController?.searchBar)!)
+        self.view.addSubview(subView)
+       // self.view.insertSubview(subView, aboveSubview: mapView)
+        searchController?.searchBar.sizeToFit()
+        searchController?.hidesNavigationBarDuringPresentation = false
+        
+        // When UISearchController presents the results view, present it in
+        // this view controller, not one further up the chain.
+        self.definesPresentationContext = true
     }
     
     //When this view is displayed first time ever, user has to allow location manager to use the real location
@@ -272,7 +299,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     //Update Address when Map becomes stable
     func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
-        addressTextField.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
+               (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
 
     }
     
@@ -380,6 +407,32 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     
     
+}
+
+extension RiderMainViewController: GMSAutocompleteResultsViewControllerDelegate {
+    func resultsController(resultsController: GMSAutocompleteResultsViewController,
+                           didAutocompleteWithPlace place: GMSPlace) {
+        searchController?.active = false
+        // Do something with the selected place.
+        print("Place name: ", place.name)
+        print("Place address: ", place.formattedAddress)
+        print("Place attributions: ", place.attributions)
+    }
+    
+    func resultsController(resultsController: GMSAutocompleteResultsViewController,
+                           didFailAutocompleteWithError error: NSError){
+        // TODO: handle the error.
+        print("Error: ", error.description)
+    }
+    
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictionsForResultsController(resultsController: GMSAutocompleteResultsViewController) {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictionsForResultsController(resultsController: GMSAutocompleteResultsViewController) {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+    }
 }
 
 

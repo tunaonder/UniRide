@@ -21,8 +21,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        //Google Maps API KEY
-        GMSServices.provideAPIKey("AIzaSyCH28jBdCHcZ44WE8RLVGu3fbqXs-d1G0s")
+        //Google Maps SDK KEY
+     //   GMSServices.provideAPIKey("AIzaSyCH28jBdCHcZ44WE8RLVGu3fbqXs-d1G0s")
+        //Google Places API Key
+        GMSServices.provideAPIKey("AIzaSyAEhhgRJaxjqEJa-rDFrM069s5TBQpM8l8")
+        
+        
+        
         
         // Enable storing and querying data from Local Datastore.
         // Remove this line if you don't want to use Local Datastore features or want to use cachePolicy.

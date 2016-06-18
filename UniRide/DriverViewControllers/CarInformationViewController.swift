@@ -13,11 +13,32 @@ class CarInformationViewController: UIViewController {
     
     
     
+    var resultsViewController: GMSAutocompleteResultsViewController?
+    var searchController: UISearchController?
+    var resultView: UITextView?
+    
     var riderMainNavigationController: UINavigationController!
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        resultsViewController = GMSAutocompleteResultsViewController()
+        resultsViewController?.delegate = self
+        
+        searchController = UISearchController(searchResultsController: resultsViewController)
+        searchController?.searchResultsUpdater = resultsViewController
+        
+        let subView = UIView(frame: CGRectMake(0, 65.0, 350.0, 45.0))
+        
+        subView.addSubview((searchController?.searchBar)!)
+        self.view.addSubview(subView)
+        searchController?.searchBar.sizeToFit()
+        searchController?.hidesNavigationBarDuringPresentation = false
+        
+        // When UISearchController presents the results view, present it in
+        // this view controller, not one further up the chain.
+        self.definesPresentationContext = true
         
         /*   riderMainNavigationController = UINavigationController(rootViewController: self)
          view.addSubview(riderMainNavigationController.view)
@@ -54,26 +75,29 @@ class CarInformationViewController: UIViewController {
     
 }
 
-extension ViewController: GMSAutocompleteViewControllerDelegate {
-    
-    // Handle the user's selection.
-    func viewController(viewController: GMSAutocompleteViewController!, didAutocompleteWithPlace place: GMSPlace!) {
-        print("Place name: \(place.name)")
-        print("Place address: \(place.formattedAddress)")
-        print("Place attributions: \(place.attributions)")
-        self.dismissViewControllerAnimated(true, completion: nil)
+extension CarInformationViewController: GMSAutocompleteResultsViewControllerDelegate {
+    func resultsController(resultsController: GMSAutocompleteResultsViewController,
+                           didAutocompleteWithPlace place: GMSPlace) {
+        searchController?.active = false
+        // Do something with the selected place.
+        print("Place name: ", place.name)
+        print("Place address: ", place.formattedAddress)
+        print("Place attributions: ", place.attributions)
     }
     
-    func viewController(viewController: GMSAutocompleteViewController!, didFailAutocompleteWithError error: NSError!) {
+    func resultsController(resultsController: GMSAutocompleteResultsViewController,
+                           didFailAutocompleteWithError error: NSError){
         // TODO: handle the error.
-        print("Error: \(error.description)")
-        self.dismissViewControllerAnimated(true, completion: nil)
+        print("Error: ", error.description)
     }
     
-    // User canceled the operation.
-    func wasCancelled(viewController: GMSAutocompleteViewController!) {
-        print("Autocomplete was cancelled.")
-        self.dismissViewControllerAnimated(true, completion: nil)
+    // Turn the network activity indicator on and off again.
+    func didRequestAutocompletePredictionsForResultsController(resultsController: GMSAutocompleteResultsViewController) {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+    }
+    
+    func didUpdateAutocompletePredictionsForResultsController(resultsController: GMSAutocompleteResultsViewController) {
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
     }
 }
 
