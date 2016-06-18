@@ -22,7 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
         //Google Maps SDK KEY
-     //   GMSServices.provideAPIKey("AIzaSyCH28jBdCHcZ44WE8RLVGu3fbqXs-d1G0s")
+      //  GMSServices.provideAPIKey("AIzaSyCH28jBdCHcZ44WE8RLVGu3fbqXs-d1G0s")
         //Google Places API Key
         GMSServices.provideAPIKey("AIzaSyAEhhgRJaxjqEJa-rDFrM069s5TBQpM8l8")
         

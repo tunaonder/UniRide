@@ -11,7 +11,6 @@ import GoogleMaps
 class AddressFinder{
     
     let baseUrl = "https://maps.googleapis.com/maps/api/geocode/json?"
-    
     func getAddressForLatLng(latitude: String, longitude: String) -> String{
         let url = NSURL(string: "\(baseUrl)latlng=\(latitude),\(longitude)")
         let data = NSData(contentsOfURL: url!)

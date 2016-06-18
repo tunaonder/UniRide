@@ -123,15 +123,45 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
     }
     
+    //change status bar color for this view
+    override func viewWillAppear(animated: Bool) {
+        //self.navigationController?.navigationBarHidden =  true
+        
+        //Status bar style and visibility
+        UIApplication.sharedApplication().statusBarHidden = false
+        UIApplication.sharedApplication().statusBarStyle = .LightContent
+        
+        //Change status bar color
+        let statusBar: UIView = UIApplication.sharedApplication().valueForKey("statusBar") as! UIView
+        if statusBar.respondsToSelector(Selector("setBackgroundColor:")) {
+            statusBar.backgroundColor = UIColor.purpleColor()
+        }
+        
+    }
+    
+    
     func initializeViewComponents(){
         //Transparent Navigation Bar
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+   /*     self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
         self.navigationController?.navigationBar.shadowImage = UIImage()
         self.navigationController?.navigationBar.translucent = true
         self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
         
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.purpleColor()]
+        self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject] */
+        
+        //UnTransparent navigation bar
+      //  UIApplication.sharedApplication().statusBarStyle = .BlackOpaqu
+        
+        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+        self.navigationController?.navigationBar.backgroundColor = UIColor.purpleColor()
+        
+        let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject]
+        
+        
+        
+        
         
         bottomButton.backgroundColor = UIColor.purpleColor()
         
@@ -169,14 +199,14 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         camera = GMSCameraPosition.cameraWithLatitude(lat,
                                                       longitude: long, zoom: 15)
         
-        /* If NAVIGATION BAR IS NOT TRANSPARENT
+       //  If NAVIGATION BAR IS NOT TRANSPARENT
          //Status Bar: 20 px
          //Nav. Bar: 44 px
          //Button on the bottom: 50px
          mapView = GMSMapView.mapWithFrame(CGRectMake(0, 64, screenSize.width, screenSize.height-114), camera: camera!)
-         */
+ 
         //If Navigation Bar is Transparent
-        mapView = GMSMapView.mapWithFrame(CGRectMake(0, 0, screenSize.width, screenSize.height-50), camera: camera!)
+     //   mapView = GMSMapView.mapWithFrame(CGRectMake(0, 0, screenSize.width, screenSize.height-50), camera: camera!)
         
         
         mapView.myLocationEnabled = true
@@ -193,11 +223,14 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         //Nav. Bar: 44 px
         //Button on the bottom: 50px
         //Total on the top: 64 px
-        //Total on the bottom: 50px. Therefore image should be moved to top 7 px extra.
+        //Total on the bottom:
+        //First Find the total map height and divide it by 2. 
+        //Move the image to bottom by 64 px because of the top view.
+        //Move the image to up by 40 px because bottom of the image should be at center of the map
         //If Nav Bar is not transparent
-        //centerImage.frame = CGRect(x: screenSize.width/2-20, y: screenSize.height/2-27, width: 40, height: 40)
+        centerImage.frame = CGRect(x: screenSize.width/2-20, y: ((screenSize.height-114)/2+24), width: 40, height: 40)
         
-        centerImage.frame = CGRect(x: screenSize.width/2-20, y: (screenSize.height-50)/2-40, width: 40, height: 40)
+        //centerImage.frame = CGRect(x: screenSize.width/2-20, y: (screenSize.height-50)/2-40, width: 40, height: 40)
         
         
         
@@ -264,14 +297,20 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         searchController.searchResultsUpdater = resultsViewController
         
         
-        subView = UIView(frame: CGRectMake(60, 60, screenSize.width-80, 40.0))
+        searchController.searchBar.searchBarStyle = .Default
+        
+        //Remove Gray Background Around Search Bar
+        searchController.searchBar.setBackgroundImage(UIImage(), forBarPosition: .Any, barMetrics: .Default)
+       
+        searchController.searchBar.sizeToFit()
+        searchController.hidesNavigationBarDuringPresentation = false
+        
+        subView = UIView(frame: CGRectMake(0, 70, screenSize.width, 40.0))
         
         subView.addSubview(searchController.searchBar)
         self.view.insertSubview(subView, aboveSubview: mapView)
-        searchController.searchBar.barTintColor = UIColor.whiteColor()
-        searchController.searchBar.searchBarStyle = .Minimal
-        searchController.searchBar.sizeToFit()
-        searchController.hidesNavigationBarDuringPresentation = false
+        
+        
         
         // When UISearchController presents the results view, present it in
         // this view controller, not one further up the chain.
