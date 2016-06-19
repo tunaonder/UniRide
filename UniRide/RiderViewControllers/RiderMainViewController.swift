@@ -25,7 +25,7 @@ enum RiderState {
 
 class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSMapViewDelegate {
     
-   
+    
     /*
      This instance variable designates the object that adopts the RiderMainViewControllerDelegate protocol.
      ContainerViewController adopts this protocol and implements its two optional methods (see its code).
@@ -37,11 +37,17 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     //Google Maps View
     var mapView = GMSMapView()
     
-
+    
     //Set Rider State
     var riderState: RiderState = .setPickupState
     
     var camera: GMSCameraPosition?
+    
+    
+    //Get the screen size of the device
+    let screenSize: CGRect = UIScreen.mainScreen().bounds
+    
+    var startMarker: GMSMarker!
     
     var centerImage: UIImageView!
     var riderLabel: UILabel!
@@ -54,14 +60,11 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var anotherDestButton: UIButton!
     var cancelRideButton: UIButton!
     
+    var resultsViewController: GMSAutocompleteResultsViewController?
+    var searchController: UISearchController!
+    var resultView: UITextView?
     
-    //Get the screen size of the device
-    let screenSize: CGRect = UIScreen.mainScreen().bounds
-    
-    var startMarker: GMSMarker!
-    
-    var timer: NSTimer!
-    
+    var mapAlreadyLoaded: Bool = false
     
     //Current Location Coordinates
     var long: Double = 0
@@ -74,16 +77,16 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     
     
-    var resultsViewController: GMSAutocompleteResultsViewController?
-    var searchController: UISearchController!
-    var resultView: UITextView?
+   
+    
+    var mapLoadCount: Int = 0
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
-
+        
+        
         
         
         initializeViewComponents()
@@ -101,28 +104,34 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         locationManager.requestWhenInUseAuthorization()
         
         
-        //Real Device (it doesnt work on simulator)
-        //If location manager returns a location continue
+        
+        //Real Device
         if let location = locationManager.location {
             long = location.coordinate.longitude
             lat = location.coordinate.latitude
             
-            mapLocationLoad()
             
+            mapLocationLoad()
+            //Set Map Already loaded, so it cannot be called from status change method
+            mapAlreadyLoaded = true
             
         }
+        
+        
+        
         
         // Do any additional setup after loading the view.
         
         
         
-       
-
+        
+        
         
         
         
     }
     
+
     //change status bar color for this view
     override func viewWillAppear(animated: Bool) {
         //self.navigationController?.navigationBarHidden =  true
@@ -141,17 +150,19 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     
     func initializeViewComponents(){
-        //Transparent Navigation Bar
-   /*     self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.translucent = true
-        self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
         
-        let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.purpleColor()]
-        self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject] */
+        
+        //Transparent Navigation Bar
+        /*     self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
+         self.navigationController?.navigationBar.shadowImage = UIImage()
+         self.navigationController?.navigationBar.translucent = true
+         self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+         
+         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.purpleColor()]
+         self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject] */
         
         //UnTransparent navigation bar
-      //  UIApplication.sharedApplication().statusBarStyle = .BlackOpaqu
+        //  UIApplication.sharedApplication().statusBarStyle = .BlackOpaqu
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
         self.navigationController?.navigationBar.backgroundColor = UIColor.purpleColor()
@@ -185,12 +196,14 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         anotherDestButton.hidden = true
         cancelRideButton.hidden = true
         
-      
+        
         
     }
     
     
     func mapLocationLoad(){
+        
+        
         //Updates user location
         locationManager.startUpdatingLocation()
         //Sends the most accurate location
@@ -199,14 +212,14 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         camera = GMSCameraPosition.cameraWithLatitude(lat,
                                                       longitude: long, zoom: 15)
         
-       //  If NAVIGATION BAR IS NOT TRANSPARENT
-         //Status Bar: 20 px
-         //Nav. Bar: 44 px
-         //Button on the bottom: 50px
-         mapView = GMSMapView.mapWithFrame(CGRectMake(0, 64, screenSize.width, screenSize.height-114), camera: camera!)
- 
+        //  If NAVIGATION BAR IS NOT TRANSPARENT
+        //Status Bar: 20 px
+        //Nav. Bar: 44 px
+        //Button on the bottom: 50px
+        mapView = GMSMapView.mapWithFrame(CGRectMake(0, 64, screenSize.width, screenSize.height-114), camera: camera!)
+        
         //If Navigation Bar is Transparent
-     //   mapView = GMSMapView.mapWithFrame(CGRectMake(0, 0, screenSize.width, screenSize.height-50), camera: camera!)
+        //   mapView = GMSMapView.mapWithFrame(CGRectMake(0, 0, screenSize.width, screenSize.height-50), camera: camera!)
         
         
         mapView.myLocationEnabled = true
@@ -224,7 +237,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         //Button on the bottom: 50px
         //Total on the top: 64 px
         //Total on the bottom:
-        //First Find the total map height and divide it by 2. 
+        //First Find the total map height and divide it by 2.
         //Move the image to bottom by 64 px because of the top view.
         //Move the image to up by 40 px because bottom of the image should be at center of the map
         //If Nav Bar is not transparent
@@ -238,11 +251,11 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         self.view.addSubview(mapView)
         self.view.insertSubview(centerImage, aboveSubview: mapView)
         
-
+        
         //Initialize On Map components after the mapview is loaded
         initializeOnMapComponents()
         
-        
+       
         
         
     }
@@ -259,7 +272,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         lessRiderButton.setTitle("-", forState: .Normal)
         lessRiderButton.backgroundColor = UIColor.blackColor()
         lessRiderButton.layer.cornerRadius = 0.5 * (lessRiderButton?.bounds.size.width)!
-       // lessRiderButton!.setImage(UIImage(named:"start-icon.png"), forState: .Normal)
+        // lessRiderButton!.setImage(UIImage(named:"start-icon.png"), forState: .Normal)
         lessRiderButton.addTarget(self, action: #selector(lessRiderButtonPressed), forControlEvents: .TouchUpInside)
         lessRiderButton.clipsToBounds = true
         self.view.insertSubview(lessRiderButton, aboveSubview: mapView)
@@ -280,11 +293,11 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         moreRiderButton.clipsToBounds = true
         self.view.insertSubview(moreRiderButton, aboveSubview: mapView)
         
-      /*  addressTextField = UITextField()
-        addressTextField.frame = CGRect(x: 70, y: 60, width: 250, height: 28)
-        addressTextField.backgroundColor = UIColor.whiteColor()
-        addressTextField.text = " " + AddressFinder().getAddressForLatLng("\(lat)", longitude: "\(long)")
-        self.view.insertSubview(addressTextField, aboveSubview: mapView)*/
+        /*  addressTextField = UITextField()
+         addressTextField.frame = CGRect(x: 70, y: 60, width: 250, height: 28)
+         addressTextField.backgroundColor = UIColor.whiteColor()
+         addressTextField.text = " " + AddressFinder().getAddressForLatLng("\(lat)", longitude: "\(long)")
+         self.view.insertSubview(addressTextField, aboveSubview: mapView)*/
         
         
         
@@ -301,9 +314,12 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         //Remove Gray Background Around Search Bar
         searchController.searchBar.setBackgroundImage(UIImage(), forBarPosition: .Any, barMetrics: .Default)
-       
+        
         searchController.searchBar.sizeToFit()
         searchController.hidesNavigationBarDuringPresentation = false
+        
+        //TEST
+    //    (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(lat)", longitude: "\(long)")
         
         subView = UIView(frame: CGRectMake(0, 70, screenSize.width, 40.0))
         
@@ -324,14 +340,18 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         if status == CLAuthorizationStatus.AuthorizedWhenInUse {
             
-            //Real Device
-            if let location = locationManager.location {
-                long = location.coordinate.longitude
-                lat = location.coordinate.latitude
-                
-                mapLocationLoad()
-                
+            
+            if mapAlreadyLoaded == false {
+                //Real Device
+                if let location = locationManager.location {
+                    long = location.coordinate.longitude
+                    lat = location.coordinate.latitude
+                    
+                    mapLocationLoad()
+                    
+                }
             }
+           
             
         }
     }
@@ -340,13 +360,19 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         // print("\(camera.target.latitude) \(camera.target.longitude)")
         markerLat = camera.target.latitude
         markerLong = camera.target.longitude
-     
+        
     }
     
     //Update Address when Map becomes stable
     func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
-               (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
-
+        print("asd")
+     //   if (mapLoadCount > 1){
+            (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
+      //  }
+       // mapLoadCount += 1
+        
+        
+        
     }
     
     /*
@@ -448,7 +474,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
     }
     
-
+    
     
     
     
