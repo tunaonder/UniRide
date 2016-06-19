@@ -76,9 +76,9 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     //Variables
     var numberOfRiders: Int = 1
-     var mapAlreadyLoaded: Bool = false
+    var mapAlreadyLoaded: Bool = false
 
-    
+    var myThemeColor: UIColor = UIColor(red: 101/255.0, green: 179/255.0, blue: 234/255.0, alpha: 1.0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -146,7 +146,8 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         //Change status bar color
         let statusBar: UIView = UIApplication.sharedApplication().valueForKey("statusBar") as! UIView
         if statusBar.respondsToSelector(Selector("setBackgroundColor:")) {
-            statusBar.backgroundColor = UIColor.purpleColor()
+            statusBar.backgroundColor = myThemeColor
+            
         }
         
     }
@@ -168,12 +169,12 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         //  UIApplication.sharedApplication().statusBarStyle = .BlackOpaqu
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
-        self.navigationController?.navigationBar.backgroundColor = UIColor.purpleColor()
+        self.navigationController?.navigationBar.backgroundColor = myThemeColor
         
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject]
 
-        bottomButton.backgroundColor = UIColor.purpleColor()
+        bottomButton.backgroundColor = myThemeColor
         
 
         
@@ -273,7 +274,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         backToPickupButton = UIButton(frame: CGRectMake(8,125,32,32))
         backToPickupButton.setTitle("<-", forState: .Normal)
-        backToPickupButton.backgroundColor = UIColor.purpleColor()
+        backToPickupButton.backgroundColor = myThemeColor
         backToPickupButton.layer.cornerRadius = 0.5 * (backToPickupButton?.bounds.size.width)!
         backToPickupButton.addTarget(self, action: #selector(backToPickupButtonPressed), forControlEvents: .TouchUpInside)
         backToPickupButton.clipsToBounds = true
@@ -311,7 +312,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         
         favListButton = UIButton(frame: CGRect(x: 6, y: screenSize.height-115, width: screenSize.width-150, height: 35))
-        favListButton.backgroundColor = UIColor.purpleColor()
+        favListButton.backgroundColor = myThemeColor
         favListButton.setTitle("Favourite Destinations", forState: .Normal)
         favListButton.addTarget(self, action: #selector(favListButtonPressed), forControlEvents: .TouchUpInside)
         favListButton.layer.cornerRadius = 10
@@ -320,9 +321,19 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         self.view.insertSubview(favListButton, aboveSubview: mapView)
         favListButton.hidden = true
         
+        addFavButton = UIButton(frame: CGRectMake(screenSize.width-130,screenSize.height-115,35,35))
+        //lessRiderButton.setTitle("-", forState: .Normal)
+        //lessRiderButton.backgroundColor = UIColor.blackColor()
+      //  addFavButton.layer.cornerRadius = 0.5 * (addFavButton?.bounds.size.width)!
+        addFavButton!.setImage(UIImage(named:"fav-icon.png"), forState: .Normal)
+        addFavButton.addTarget(self, action: #selector(lessRiderButtonPressed), forControlEvents: .TouchUpInside)
+        //addFavButton.clipsToBounds = true
+        self.view.insertSubview(addFavButton, aboveSubview: mapView)
+        addFavButton.hidden = true
+        
         
         anotherDestButton = UIButton(frame: CGRect(x: 6, y: screenSize.height-115, width: screenSize.width-100, height: 35))
-        anotherDestButton.backgroundColor = UIColor.purpleColor()
+        anotherDestButton.backgroundColor = myThemeColor
         anotherDestButton.setTitle("Set Alternative Destination!", forState: .Normal)
         anotherDestButton.addTarget(self, action: #selector(setAnotherDestinationButtonPressed), forControlEvents: .TouchUpInside)
         anotherDestButton.layer.cornerRadius = 10
@@ -415,6 +426,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             centerImage.image = UIImage(named: "destination-icon")
             backToPickupButton.hidden = false
             favListButton.hidden = false
+            addFavButton.hidden = false
             
             
             //Rider Count Components
@@ -435,6 +447,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             backToPickupButton.hidden = true
             searchSubView.hidden = true
             favListButton.hidden = true
+            addFavButton.hidden = true
             
             
             
@@ -443,7 +456,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         case .cancelState:
             mapView.clear()
             
-            bottomButton.backgroundColor = UIColor.purpleColor()
+            bottomButton.backgroundColor = myThemeColor
             bottomButton.setTitle("Set Pickup Location", forState: .Normal)
            
             searchSubView.hidden = false
@@ -481,6 +494,8 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         centerImage.image = UIImage(named: "start-icon")
         backToPickupButton.hidden = true
+        favListButton.hidden = true
+        addFavButton.hidden = true
         
         //Rider Count Components
         riderLabel.hidden = false
