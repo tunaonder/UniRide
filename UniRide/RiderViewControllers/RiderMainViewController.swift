@@ -50,21 +50,23 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var startMarker: GMSMarker!
     
     var centerImage: UIImageView!
+    var backToPickupButton: UIButton!
     var riderLabel: UILabel!
     var lessRiderButton: UIButton!
     var moreRiderButton: UIButton!
     var riderCountDisplayLabel: UILabel!
-    var subView: UIView!
+    var searchSubView: UIView!
     
     @IBOutlet var bottomButton: UIButton!
     var anotherDestButton: UIButton!
-    var cancelRideButton: UIButton!
+    var favListButton: UIButton!
+    var addFavButton: UIButton!
     
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController!
     var resultView: UITextView?
     
-    var mapAlreadyLoaded: Bool = false
+   
     
     //Current Location Coordinates
     var long: Double = 0
@@ -72,22 +74,15 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var markerLat: Double = 0
     var markerLong: Double = 0
     
-    //
+    //Variables
     var numberOfRiders: Int = 1
-    
-    
-    
-   
-    
-    var mapLoadCount: Int = 0
+     var mapAlreadyLoaded: Bool = false
+
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
-        
+  
         
         initializeViewComponents()
         
@@ -132,6 +127,14 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     }
     
 
+
+    
+    /*
+     -------------------------
+     MARK: - Initialize View Components
+     -------------------------
+     */
+    
     //change status bar color for this view
     override func viewWillAppear(animated: Bool) {
         //self.navigationController?.navigationBarHidden =  true
@@ -169,34 +172,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject]
-        
-        
-        
-        
-        
+
         bottomButton.backgroundColor = UIColor.purpleColor()
         
-        
-        anotherDestButton = UIButton(frame: CGRect(x: 0, y: screenSize.height-50, width: screenSize.width/2, height: 50))
-        anotherDestButton.backgroundColor = UIColor.blueColor()
-        anotherDestButton.setTitle("Set Alternative Destination!", forState: .Normal)
-        anotherDestButton.titleLabel?.numberOfLines = 2
-        anotherDestButton.addTarget(self, action: #selector(setAnotherDestinationButtonPressed), forControlEvents: .TouchUpInside)
-        
-        
-        cancelRideButton = UIButton(frame: CGRect(x: screenSize.width/2, y: screenSize.height-50, width: screenSize.width/2, height: 50))
-        cancelRideButton.backgroundColor = UIColor.redColor()
-        cancelRideButton.setTitle("Cancel Ride Request!", forState: .Normal)
-        cancelRideButton.titleLabel?.numberOfLines = 2
-        cancelRideButton.addTarget(self, action: #selector(cancelRideButtonPressed), forControlEvents: .TouchUpInside)
-        
-        self.view.addSubview(anotherDestButton)
-        self.view.addSubview(cancelRideButton)
-        
-        anotherDestButton.hidden = true
-        cancelRideButton.hidden = true
-        
-        
+
         
     }
     
@@ -245,8 +224,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         //centerImage.frame = CGRect(x: screenSize.width/2-20, y: (screenSize.height-50)/2-40, width: 40, height: 40)
         
-        
-        
+    
         
         self.view.addSubview(mapView)
         self.view.insertSubview(centerImage, aboveSubview: mapView)
@@ -263,12 +241,12 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     func initializeOnMapComponents(){
         riderLabel = UILabel()
         riderLabel.text = "Number of Riders: "
-        riderLabel.font = UIFont(name: "Georgia", size: 17)
-        riderLabel.frame = CGRect(x: 6, y: screenSize.height-100, width: 150, height: 21)
+        riderLabel.font = UIFont(name: "Georgia", size: 16)
+        riderLabel.frame = CGRect(x: 6, y: screenSize.height-100, width: 135, height: 21)
         self.view.insertSubview(riderLabel, aboveSubview: mapView)
         
         
-        lessRiderButton = UIButton(frame: CGRectMake(160,screenSize.height-101,25,25))
+        lessRiderButton = UIButton(frame: CGRectMake(145,screenSize.height-101,25,25))
         lessRiderButton.setTitle("-", forState: .Normal)
         lessRiderButton.backgroundColor = UIColor.blackColor()
         lessRiderButton.layer.cornerRadius = 0.5 * (lessRiderButton?.bounds.size.width)!
@@ -281,10 +259,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         riderCountDisplayLabel = UILabel()
         riderCountDisplayLabel.text = "\(numberOfRiders)"
         riderCountDisplayLabel.font = UIFont(name: "Georgia", size: 26)
-        riderCountDisplayLabel.frame = CGRect(x: 205, y: screenSize.height-105, width: 21, height: 28)
+        riderCountDisplayLabel.frame = CGRect(x: 185, y: screenSize.height-105, width: 21, height: 28)
         self.view.insertSubview(riderCountDisplayLabel, aboveSubview: mapView)
         
-        moreRiderButton = UIButton(frame: CGRectMake(240,screenSize.height-101,25,25))
+        moreRiderButton = UIButton(frame: CGRectMake(215,screenSize.height-101,25,25))
         moreRiderButton.setTitle("+", forState: .Normal)
         moreRiderButton.backgroundColor = UIColor.blackColor()
         moreRiderButton.layer.cornerRadius = 0.5 * (moreRiderButton?.bounds.size.width)!
@@ -293,14 +271,16 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         moreRiderButton.clipsToBounds = true
         self.view.insertSubview(moreRiderButton, aboveSubview: mapView)
         
-        /*  addressTextField = UITextField()
-         addressTextField.frame = CGRect(x: 70, y: 60, width: 250, height: 28)
-         addressTextField.backgroundColor = UIColor.whiteColor()
-         addressTextField.text = " " + AddressFinder().getAddressForLatLng("\(lat)", longitude: "\(long)")
-         self.view.insertSubview(addressTextField, aboveSubview: mapView)*/
+        backToPickupButton = UIButton(frame: CGRectMake(8,125,32,32))
+        backToPickupButton.setTitle("<-", forState: .Normal)
+        backToPickupButton.backgroundColor = UIColor.purpleColor()
+        backToPickupButton.layer.cornerRadius = 0.5 * (backToPickupButton?.bounds.size.width)!
+        backToPickupButton.addTarget(self, action: #selector(backToPickupButtonPressed), forControlEvents: .TouchUpInside)
+        backToPickupButton.clipsToBounds = true
+        self.view.insertSubview(backToPickupButton, aboveSubview: mapView)
+        backToPickupButton.hidden = true
         
-        
-        
+
         
         resultsViewController = GMSAutocompleteResultsViewController()
         resultsViewController?.delegate = self
@@ -318,19 +298,39 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         searchController.searchBar.sizeToFit()
         searchController.hidesNavigationBarDuringPresentation = false
         
-        //TEST
-    //    (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(lat)", longitude: "\(long)")
+        searchSubView = UIView(frame: CGRectMake(0, 70, screenSize.width, 40.0))
         
-        subView = UIView(frame: CGRectMake(0, 70, screenSize.width, 40.0))
-        
-        subView.addSubview(searchController.searchBar)
-        self.view.insertSubview(subView, aboveSubview: mapView)
+        searchSubView.addSubview(searchController.searchBar)
+        self.view.insertSubview(searchSubView, aboveSubview: mapView)
         
         
         
         // When UISearchController presents the results view, present it in
         // this view controller, not one further up the chain.
         self.definesPresentationContext = true
+        
+        
+        favListButton = UIButton(frame: CGRect(x: 6, y: screenSize.height-115, width: screenSize.width-150, height: 35))
+        favListButton.backgroundColor = UIColor.purpleColor()
+        favListButton.setTitle("Favourite Destinations", forState: .Normal)
+        favListButton.addTarget(self, action: #selector(favListButtonPressed), forControlEvents: .TouchUpInside)
+        favListButton.layer.cornerRadius = 10
+        favListButton.clipsToBounds = true
+        favListButton.titleLabel?.font = UIFont(name: "Georgia", size: 15)
+        self.view.insertSubview(favListButton, aboveSubview: mapView)
+        favListButton.hidden = true
+        
+        
+        anotherDestButton = UIButton(frame: CGRect(x: 6, y: screenSize.height-115, width: screenSize.width-100, height: 35))
+        anotherDestButton.backgroundColor = UIColor.purpleColor()
+        anotherDestButton.setTitle("Set Alternative Destination!", forState: .Normal)
+        anotherDestButton.addTarget(self, action: #selector(setAnotherDestinationButtonPressed), forControlEvents: .TouchUpInside)
+        anotherDestButton.layer.cornerRadius = 10
+        anotherDestButton.clipsToBounds = true
+        anotherDestButton.titleLabel?.font = UIFont(name: "Georgia", size: 15)
+        self.view.insertSubview(anotherDestButton, aboveSubview: mapView)
+        anotherDestButton.hidden = true
+        
     }
     
     //When this view is displayed first time ever, user has to allow location manager to use the real location
@@ -365,11 +365,9 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     //Update Address when Map becomes stable
     func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
-        print("asd")
-     //   if (mapLoadCount > 1){
+
             (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
-      //  }
-       // mapLoadCount += 1
+      
         
         
         
@@ -415,20 +413,56 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             //  mapView.animateWithCameraUpdate(GMSCameraUpdate.setTarget(position2))
             
             centerImage.image = UIImage(named: "destination-icon")
-            // centerImageForDest?.hidden = false
+            backToPickupButton.hidden = false
+            favListButton.hidden = false
+            
+            
+            //Rider Count Components
+            riderLabel.hidden = true
+            moreRiderButton.hidden = true
+            lessRiderButton.hidden = true
+            riderCountDisplayLabel.hidden = true
+          
             
             //Change the State
             riderState = .setDestinationState
         case .setDestinationState:
             
-            bottomButton.hidden = true
+            bottomButton.setTitle("Cancel Ride Request", forState: .Normal)
+            bottomButton.backgroundColor = UIColor.redColor()
+            
             anotherDestButton.hidden = false
-            cancelRideButton.hidden = false
+            backToPickupButton.hidden = true
+            searchSubView.hidden = true
+            favListButton.hidden = true
+            
+            
             
             //Change The State
             riderState = .cancelState
-        default:
-            break
+        case .cancelState:
+            mapView.clear()
+            
+            bottomButton.backgroundColor = UIColor.purpleColor()
+            bottomButton.setTitle("Set Pickup Location", forState: .Normal)
+           
+            searchSubView.hidden = false
+            anotherDestButton.hidden = true
+            
+            centerImage.image = UIImage(named: "start-icon")
+            
+            //Rider Count Components
+            riderLabel.hidden = false
+            moreRiderButton.hidden = false
+            lessRiderButton.hidden = false
+            riderCountDisplayLabel.hidden = false
+            
+            
+            
+            //Change the state
+            riderState = .setPickupState
+            
+       
         }
         
         
@@ -441,22 +475,26 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
     }
     
-    func cancelRideButtonPressed(){
-        
+    func backToPickupButtonPressed(){
         mapView.clear()
-        
-        bottomButton.backgroundColor = UIColor.purpleColor()
         bottomButton.setTitle("Set Pickup Location", forState: .Normal)
-        bottomButton.hidden = false
-        
-        anotherDestButton.hidden = true
-        cancelRideButton.hidden = true
         
         centerImage.image = UIImage(named: "start-icon")
+        backToPickupButton.hidden = true
         
-        //Change the state
+        //Rider Count Components
+        riderLabel.hidden = false
+        moreRiderButton.hidden = false
+        lessRiderButton.hidden = false
+        riderCountDisplayLabel.hidden = false
+        
         riderState = .setPickupState
     }
+    
+    func favListButtonPressed(){
+        
+    }
+    
     
     func lessRiderButtonPressed(){
         if numberOfRiders > 1{
