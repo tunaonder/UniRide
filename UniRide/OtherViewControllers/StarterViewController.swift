@@ -23,13 +23,13 @@ class StarterViewController: UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         //temp
-        let containerViewController = ContainerViewController()
+   //     let containerViewController = ContainerViewController()
         
         //Display ContainerViewController with Animation
-        Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
+   //     Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
         
         
-     /*   if (PFUser.currentUser()?.username) != nil {
+        if (PFUser.currentUser()?.username) != nil {
             
             PFUser.currentUser()!.fetchInBackgroundWithBlock({ (currentUser: PFObject?, error: NSError?) -> Void in
                
@@ -59,7 +59,7 @@ class StarterViewController: UIViewController {
         else {
             print("First Time User")
             
-        }*/
+        }
     }
 
     

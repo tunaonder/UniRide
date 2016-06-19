@@ -21,6 +21,7 @@ enum RiderState {
     case setPickupState
     case setDestinationState
     case cancelState
+    case setAlternativeState
 }
 
 class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSMapViewDelegate {
@@ -48,6 +49,8 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     let screenSize: CGRect = UIScreen.mainScreen().bounds
     
     var startMarker: GMSMarker!
+    var destMarker1: GMSMarker!
+    var destMarker2: GMSMarker!
     
     var centerImage: UIImageView!
     var backToPickupButton: UIButton!
@@ -170,7 +173,8 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         self.navigationController?.navigationBar.setBackgroundImage(UIImage(), forBarMetrics: .Default)
         self.navigationController?.navigationBar.backgroundColor = myThemeColor
-        
+        //Remove the 1 px seperator between nav bar and the view below
+        self.navigationController?.navigationBar.shadowImage = UIImage()
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject]
 
@@ -291,15 +295,18 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         searchController.searchResultsUpdater = resultsViewController
         
         
-        searchController.searchBar.searchBarStyle = .Default
+       // searchController.searchBar.searchBarStyle = .Default
         
         //Remove Gray Background Around Search Bar
-        searchController.searchBar.setBackgroundImage(UIImage(), forBarPosition: .Any, barMetrics: .Default)
+        //searchController.searchBar.setBackgroundImage(UIImage(), forBarPosition: .Any, barMetrics: .Default)
+        searchController.searchBar.backgroundImage = UIImage()
+        searchController.searchBar.barTintColor = myThemeColor
         
-        searchController.searchBar.sizeToFit()
+       // searchController.searchBar.sizeToFit()
         searchController.hidesNavigationBarDuringPresentation = false
         
-        searchSubView = UIView(frame: CGRectMake(0, 70, screenSize.width, 40.0))
+        searchSubView = UIView(frame: CGRectMake(0, 64, screenSize.width, 40.0))
+        searchSubView.backgroundColor = myThemeColor
         
         searchSubView.addSubview(searchController.searchBar)
         self.view.insertSubview(searchSubView, aboveSubview: mapView)
@@ -412,14 +419,15 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         switch (riderState) {
         case .setPickupState:
             //bottomButton.backgroundColor = UIColor.redColor()
-            bottomButton.setTitle("SET DESTINATION & GO!", forState: .Normal)
+            bottomButton.setTitle("Set Destination & Go!", forState: .Normal)
             
             let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
             startMarker = GMSMarker(position: position)
+            startMarker.icon = UIImage(named: "start-flag")
             startMarker.map = mapView
             
-            //  let zoomOut = GMSCameraUpdate.zoomTo(14)
-            //  mapView.animateWithCameraUpdate(zoomOut)
+              let zoomOut = GMSCameraUpdate.zoomTo(14)
+              mapView.animateWithCameraUpdate(zoomOut)
             // let position2 = CLLocationCoordinate2D(latitude: lat, longitude: long)
             //  mapView.animateWithCameraUpdate(GMSCameraUpdate.setTarget(position2))
             
@@ -449,6 +457,13 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             favListButton.hidden = true
             addFavButton.hidden = true
             
+            //Add Marker
+            let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
+            destMarker1 = GMSMarker(position: position)
+            destMarker1.icon = UIImage(named: "dest-flag")
+            destMarker1.map = mapView
+            
+            centerImage.hidden = true
             
             
             //Change The State
@@ -461,7 +476,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
            
             searchSubView.hidden = false
             anotherDestButton.hidden = true
+            favListButton.hidden = true
+            addFavButton.hidden = true
             
+            centerImage.hidden = false
             centerImage.image = UIImage(named: "start-icon")
             
             //Rider Count Components
@@ -474,9 +492,31 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             
             //Change the state
             riderState = .setPickupState
+        
+        case .setAlternativeState:
+            //Add Marker
+            let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
+            destMarker2 = GMSMarker(position: position)
+            destMarker2.icon = UIImage(named: "dest-flag")
+            destMarker2.map = mapView
             
-       
+            bottomButton.setTitle("Cancel Ride Request", forState: .Normal)
+            bottomButton.backgroundColor = UIColor.redColor()
+            
+            anotherDestButton.hidden = false
+            backToPickupButton.hidden = true
+            searchSubView.hidden = true
+            favListButton.hidden = true
+            addFavButton.hidden = true
+            centerImage.hidden = true
+            
+            anotherDestButton.hidden = true
+            
+            //Change the state
+            riderState = .cancelState
+     
         }
+        
         
         
     }
@@ -484,7 +524,17 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     //Rider Can Send Additional Requests at the Same Time!
     func setAnotherDestinationButtonPressed(){
+        anotherDestButton.hidden = true
+        searchSubView.hidden = false
+        favListButton.hidden = false
+        addFavButton.hidden = false
+        centerImage.hidden = false
         
+        bottomButton.setTitle("Set Alternative Destination", forState: .Normal)
+        bottomButton.backgroundColor = myThemeColor
+        
+        //Change the state
+        riderState = .setAlternativeState
         
     }
     
