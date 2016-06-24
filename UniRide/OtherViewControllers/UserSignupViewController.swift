@@ -53,10 +53,10 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
                         //Set User Name
                         self.userNameLabel.text = result["name"]! as? String
                         
-                        let imageFile: PFFile = PFFile(data: data)!
+                      //  let imageFile: PFFile = PFFile(data: data)!
                         
-                        PFUser.currentUser()?["image"] = imageFile
-                        PFUser.currentUser()?.saveInBackground()
+                      //  PFUser.currentUser()?["image"] = imageFile
+                      //  PFUser.currentUser()?.saveInBackground()
                         
                     }
                 }
@@ -68,13 +68,44 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
     
     
     @IBAction func continueButtonPressed(sender: AnyObject) {
-
-        // Create a ContainerViewController object and store its object reference into the local variable containerViewController.
-        let containerViewController = ContainerViewController()
         
-        //Display ContainerViewController with Animation
-        Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
+        let user = PFUser.currentUser()
+        if let user = user {
+            user["signedUp"] = 1
+            user.saveInBackgroundWithBlock { (success, error) -> Void in
+                
+                
+                if error == nil {
+                    // Create a ContainerViewController object and store its object reference into the local variable containerViewController.
+                    let containerViewController = ContainerViewController()
+                    
+                    //Display ContainerViewController with Animation
+                    Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
+                    
+                }
+                    
+                else{
+                    
+                    if let errorString = error!.userInfo["error"] as? String {
+                        
+                        AlertView().displayAlert("Could not Signed Up", message: errorString, view: self)
+                        
+                    }
+                    
+                }
+                
+            }
+        }
+        
+        
+       
     }
+    
+    /*
+     -------------------------
+     MARK: - Setting User Profile Image
+     -------------------------
+     */
     
     func specifyImageView(){
         let screenSize: CGRect = UIScreen.mainScreen().bounds
@@ -127,6 +158,8 @@ class UserSignUpViewController: UIViewController, UINavigationControllerDelegate
         
    
     }
+    
+
     
     
     

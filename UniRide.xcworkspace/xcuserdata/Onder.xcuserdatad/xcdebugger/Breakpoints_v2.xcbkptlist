@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UniRide/RiderViewControllers/RiderMainViewController.swift"
-            timestampString = "488061627.624817"
+            timestampString = "488493951.945024"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "725"
-            endingLineNumber = "725">
+            startingLineNumber = "837"
+            endingLineNumber = "837">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UniRide/OtherViewControllers/UserSignupViewController.swift"
-            timestampString = "487867180.155686"
+            timestampString = "488466883.910482"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "imageTapped(_:)"
             landmarkType = "5">
             <Locations>
@@ -104,11 +104,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UniRide/RiderViewControllers/RiderMainViewController.swift"
-            timestampString = "488059657.317934"
+            timestampString = "488492616.908513"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "297"
-            endingLineNumber = "297"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
             landmarkName = "initializeOnMapComponents()"
             landmarkType = "5">
          </BreakpointContent>

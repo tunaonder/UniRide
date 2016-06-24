@@ -8,6 +8,7 @@
 
 import UIKit
 import GoogleMaps
+import Parse
 
 @objc
 // Define RiderMainViewControllerDelegate as a protocol with two optional methods
@@ -69,7 +70,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var searchController: UISearchController!
     var resultView: UITextView?
     
-   
+    
     
     //Current Location Coordinates
     var long: Double = 0
@@ -80,12 +81,16 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     //Variables
     var numberOfRiders: Int = 1
     var mapAlreadyLoaded: Bool = false
-
+    var pickUpAddress: String = ""
+    var pickUpLatitude = Double()
+    var pickUpLongitude = Double()
+    
     var myThemeColor: UIColor = UIColor(red: 101/255.0, green: 179/255.0, blue: 234/255.0, alpha: 1.0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-  
+        
+        
         
         initializeViewComponents()
         
@@ -123,14 +128,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         
         
-        
-        
-        
-        
     }
     
-
-
+    
+    
     
     /*
      -------------------------
@@ -177,10 +178,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         self.navigationController?.navigationBar.shadowImage = UIImage()
         let titleDict: NSDictionary = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController!.navigationBar.titleTextAttributes = titleDict as? [String : AnyObject]
-
+        
         bottomButton.backgroundColor = myThemeColor
         
-
+        
         
     }
     
@@ -229,7 +230,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
         //centerImage.frame = CGRect(x: screenSize.width/2-20, y: (screenSize.height-50)/2-40, width: 40, height: 40)
         
-    
+        
         
         self.view.addSubview(mapView)
         self.view.insertSubview(centerImage, aboveSubview: mapView)
@@ -238,7 +239,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         //Initialize On Map components after the mapview is loaded
         initializeOnMapComponents()
         
-       
+        
         
         
     }
@@ -285,7 +286,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         self.view.insertSubview(backToPickupButton, aboveSubview: mapView)
         backToPickupButton.hidden = true
         
-
+        
         
         resultsViewController = GMSAutocompleteResultsViewController()
         resultsViewController?.delegate = self
@@ -295,14 +296,14 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         searchController.searchResultsUpdater = resultsViewController
         
         
-       // searchController.searchBar.searchBarStyle = .Default
+        // searchController.searchBar.searchBarStyle = .Default
         
         //Remove Gray Background Around Search Bar
         //searchController.searchBar.setBackgroundImage(UIImage(), forBarPosition: .Any, barMetrics: .Default)
         searchController.searchBar.backgroundImage = UIImage()
         searchController.searchBar.barTintColor = myThemeColor
         
-       // searchController.searchBar.sizeToFit()
+        // searchController.searchBar.sizeToFit()
         searchController.hidesNavigationBarDuringPresentation = false
         
         searchSubView = UIView(frame: CGRectMake(0, 64, screenSize.width, 40.0))
@@ -331,7 +332,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         addFavButton = UIButton(frame: CGRectMake(screenSize.width-130,screenSize.height-115,35,35))
         //lessRiderButton.setTitle("-", forState: .Normal)
         //lessRiderButton.backgroundColor = UIColor.blackColor()
-      //  addFavButton.layer.cornerRadius = 0.5 * (addFavButton?.bounds.size.width)!
+        //  addFavButton.layer.cornerRadius = 0.5 * (addFavButton?.bounds.size.width)!
         addFavButton!.setImage(UIImage(named:"fav-icon.png"), forState: .Normal)
         addFavButton.addTarget(self, action: #selector(lessRiderButtonPressed), forControlEvents: .TouchUpInside)
         //addFavButton.clipsToBounds = true
@@ -369,13 +370,13 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
                     
                 }
             }
-           
+            
             
         }
     }
     
+    //Coordinates of Center Of the map change when camera moves
     func mapView(mapView: GMSMapView, didChangeCameraPosition camera: GMSCameraPosition) {
-        // print("\(camera.target.latitude) \(camera.target.longitude)")
         markerLat = camera.target.latitude
         markerLong = camera.target.longitude
         
@@ -383,9 +384,9 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     //Update Address when Map becomes stable
     func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
-
-            (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
-      
+        
+        (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
+        
         
         
         
@@ -422,12 +423,14 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             bottomButton.setTitle("Set Destination & Go!", forState: .Normal)
             
             let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
+            pickUpLatitude = markerLat
+            pickUpLongitude = markerLong
             startMarker = GMSMarker(position: position)
             startMarker.icon = UIImage(named: "start-flag")
             startMarker.map = mapView
             
-              let zoomOut = GMSCameraUpdate.zoomTo(14)
-              mapView.animateWithCameraUpdate(zoomOut)
+            //   let zoomOut = GMSCameraUpdate.zoomTo(14)
+            //   mapView.animateWithCameraUpdate(zoomOut)
             // let position2 = CLLocationCoordinate2D(latitude: lat, longitude: long)
             //  mapView.animateWithCameraUpdate(GMSCameraUpdate.setTarget(position2))
             
@@ -442,10 +445,13 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             moreRiderButton.hidden = true
             lessRiderButton.hidden = true
             riderCountDisplayLabel.hidden = true
-          
+            
             
             //Change the State
             riderState = .setDestinationState
+            
+            //Set the address
+            pickUpAddress = (searchController?.searchBar.text)!
         case .setDestinationState:
             
             bottomButton.setTitle("Cancel Ride Request", forState: .Normal)
@@ -468,12 +474,18 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             
             //Change The State
             riderState = .cancelState
+            
+            //Send Ride Request to Server with the Destination Address
+            sendRideRequest((searchController?.searchBar.text)!)
+            
+            
+            
         case .cancelState:
             mapView.clear()
             
             bottomButton.backgroundColor = myThemeColor
             bottomButton.setTitle("Set Pickup Location", forState: .Normal)
-           
+            
             searchSubView.hidden = false
             anotherDestButton.hidden = true
             favListButton.hidden = true
@@ -492,7 +504,16 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             
             //Change the state
             riderState = .setPickupState
-        
+            
+            //Clear Data
+            pickUpAddress = ""
+            pickUpLatitude = Double()
+            pickUpLongitude = Double()
+            
+            //Cancel Request To Server
+            cancelRideRequest()
+            
+            
         case .setAlternativeState:
             //Add Marker
             let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
@@ -514,7 +535,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             
             //Change the state
             riderState = .cancelState
-     
+            
+            //Send Ride Request to Server with the Destination Address
+            sendRideRequest((searchController?.searchBar.text)!)
+            
         }
         
         
@@ -554,6 +578,11 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         riderCountDisplayLabel.hidden = false
         
         riderState = .setPickupState
+        
+        //Clear
+        pickUpAddress = ""
+        pickUpLatitude = Double()
+        pickUpLongitude = Double()
     }
     
     func favListButtonPressed(){
@@ -578,7 +607,90 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     }
     
     
+    /*
+     -------------------------
+     MARK: - Send Request to Server
+     -------------------------
+     */
     
+    func sendRideRequest(destination: String){
+        
+        let riderRequest = PFObject(className: "RiderRequest")
+        
+        riderRequest["user"] = PFUser.currentUser()
+        riderRequest["riderCount"] = numberOfRiders
+        let pickUpCoords = [pickUpLatitude, pickUpLongitude]
+        riderRequest["pickUpCoords"] = pickUpCoords
+        let destinationCoords = [markerLat, markerLong]
+        riderRequest["destinationCoords"] = destinationCoords
+        riderRequest["pickUpAddress"] = pickUpAddress
+        riderRequest["destinationAddress"] = destination
+        
+        riderRequest.saveInBackgroundWithBlock { (success, error) -> Void in
+            
+            if error == nil {
+          
+                AlertView().displayAlert("Your Ride Request from \(self.pickUpAddress) to \(destination) is Sent!", message: "Waiting for Available Drivers.", view: self)
+                
+                
+                
+            }
+                
+            else{
+                print(error)
+                
+                
+            }
+            
+        }
+        
+    }
+    
+    func cancelRideRequest(){
+        let riderQuery = PFQuery(className: "RiderRequest")
+        riderQuery.whereKey("user", equalTo: PFUser.currentUser()!)
+        
+        riderQuery.findObjectsInBackgroundWithBlock({ (objects: [PFObject]?, error) -> Void in
+            
+            if error == nil {
+                
+                if let objects = objects as [PFObject]! {
+                    
+                    for object in objects {
+                        
+                        object.deleteInBackground()
+                    }
+                }
+                
+                AlertView().displayAlert("Notification", message: "Your Ride Request is Cancelled.", view: self)
+            } else {
+                
+                print(error)
+            }
+            
+        })
+    }
+    
+    /*
+     -------------------------
+     MARK: - ALERT VIEW
+     -------------------------
+     */
+    
+    func displayAlert(title: String, message: String){
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+            
+            
+            
+        }))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+        
+        
+        
+    }
     
     
     

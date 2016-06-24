@@ -29,7 +29,9 @@ class StarterViewController: UIViewController {
    //     Animate().showViewControllerWith(containerViewController, usingAnimation: AnimationType.ANIMATE_UP)
         
         
-        if (PFUser.currentUser()?.username) != nil {
+        //If Current User is cached on the disk
+        //PFUser.currentUser()?["name"] returns Optional("facebook name of the user")
+        if PFUser.currentUser()?["name"] != nil {
             
             PFUser.currentUser()!.fetchInBackgroundWithBlock({ (currentUser: PFObject?, error: NSError?) -> Void in
                
@@ -55,7 +57,7 @@ class StarterViewController: UIViewController {
                     
                 }
             })
-        }
+     }
         else {
             print("First Time User")
             
