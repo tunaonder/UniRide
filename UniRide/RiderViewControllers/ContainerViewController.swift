@@ -43,7 +43,7 @@ class ContainerViewController: UIViewController, RiderMainViewControllerDelegate
     
     
     // This defines how much the center view will show on the right when the menu is shown on the left.
-    let centerPanelExpandedOffset: CGFloat = 80
+    let centerPanelExpandedOffset: CGFloat = 150
     
     /*
      -----------------------
@@ -166,7 +166,6 @@ class ContainerViewController: UIViewController, RiderMainViewControllerDelegate
                 //When Menu is Collapsed, consumes gestures in the map
                 //So that menu cannot be expanded with the gesture left to right
                 self.riderMainViewController.mapView.settings.consumesGesturesInView = true
-                
                 
             }
         }

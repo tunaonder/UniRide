@@ -85,6 +85,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var pickUpLatitude = Double()
     var pickUpLongitude = Double()
     
+    //TEMP
+    let bilkentLatitude = 39.866826
+    let bilkentLongitude = 32.747355
+    
     var myThemeColor: UIColor = UIColor(red: 101/255.0, green: 179/255.0, blue: 234/255.0, alpha: 1.0)
     
     override func viewDidLoad() {
@@ -118,6 +122,13 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
             //Set Map Already loaded, so it cannot be called from status change method
             mapAlreadyLoaded = true
             
+        }            
+        //TEMP
+        else {
+            long = bilkentLongitude
+            lat = bilkentLatitude
+            mapLocationLoad()
+            mapAlreadyLoaded = true
         }
         
         

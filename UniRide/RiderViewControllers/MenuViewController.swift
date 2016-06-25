@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Parse
 
 
 
@@ -15,8 +16,12 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
 
     
     @IBOutlet var tableView: UITableView!
+    var profilePicView: UIImageView!
     
     var tableViewList = [String]()
+    
+    //Get the screen size of the device
+    let screenSize: CGRect = UIScreen.mainScreen().bounds
     
     // Flags created and initialized
     var itemSelected: Bool = false
@@ -24,9 +29,16 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let image = UIImage(named: "fav-icon")
+        profilePicView = UIImageView(image: image!)
+        profilePicView.frame = CGRect(x: (screenSize.width-150)/2-40, y: 28, width: 80, height: 80)
+        view.addSubview(profilePicView)
+
         
+        tableViewList.append(PFUser.currentUser()!["name"] as! String)
         tableViewList.append("Switch to Driver")
         tableViewList.append("Settings")
+        
         
         // Do any additional setup after loading the view.
     }
@@ -96,10 +108,10 @@ class MenuViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         
         cell.textLabel!.textColor = UIColor.blueColor()
+        //Background color to Ivory (#FFFFF0)
+        cell.backgroundColor = UIColor(red: 255.0/255.0, green: 218.0/255.0, blue: 185.0/255.0, alpha: 1.0)
         
         
-        
-        cell.backgroundColor = UIColor(red: 230.0/255.0, green: 230.0/255.0, blue: 250.0/255.0, alpha: 1.0)
         
         
         

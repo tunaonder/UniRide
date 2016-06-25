@@ -134,14 +134,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="GhA-r8-oYI">
-                                <rect key="frame" x="0.0" y="20" width="335" height="647"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <rect key="frame" x="0.0" y="120" width="300" height="547"/>
+                                <color key="backgroundColor" red="1" green="0.85490196078431369" blue="0.72549019607843135" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MenuItemCell" id="Ntf-Uf-Zae">
-                                        <rect key="frame" x="0.0" y="28" width="335" height="44"/>
+                                        <rect key="frame" x="0.0" y="28" width="300" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ntf-Uf-Zae" id="o6a-Hh-FaU">
-                                            <rect key="frame" x="0.0" y="0.0" width="335" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="300" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -152,12 +152,12 @@
                                 </connections>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="0.85490196078431369" blue="0.72549019607843135" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="112-5K-Lnh" firstAttribute="top" secondItem="GhA-r8-oYI" secondAttribute="bottom" id="cZU-nq-FiK"/>
+                            <constraint firstItem="GhA-r8-oYI" firstAttribute="top" secondItem="dqT-CT-PIc" secondAttribute="bottom" constant="100" id="9FN-aX-P5D"/>
+                            <constraint firstAttribute="trailing" secondItem="GhA-r8-oYI" secondAttribute="trailing" constant="75" id="Lup-QM-jZ4"/>
                             <constraint firstItem="GhA-r8-oYI" firstAttribute="leading" secondItem="zh6-eF-4Dd" secondAttribute="leading" id="f0v-tN-fdZ"/>
-                            <constraint firstAttribute="trailing" secondItem="GhA-r8-oYI" secondAttribute="trailing" constant="40" id="f7l-ed-VJa"/>
-                            <constraint firstItem="GhA-r8-oYI" firstAttribute="top" secondItem="dqT-CT-PIc" secondAttribute="bottom" id="jDr-FK-ESp"/>
+                            <constraint firstItem="112-5K-Lnh" firstAttribute="top" secondItem="GhA-r8-oYI" secondAttribute="bottom" id="feK-em-8lN"/>
                         </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
