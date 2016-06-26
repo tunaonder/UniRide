@@ -339,7 +339,27 @@
                     <view key="view" contentMode="scaleToFill" id="ATR-i0-o7h">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFe-EW-ViO">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="c4L-Hm-MTX"/>
+                                </constraints>
+                                <state key="normal" title="Set Starting Location">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="bottomButtonPressed:" destination="efy-9b-4BO" eventType="touchUpInside" id="0uy-W0-jng"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="bya-ot-aOe" firstAttribute="top" secondItem="dFe-EW-ViO" secondAttribute="bottom" id="0fT-WJ-QvA"/>
+                            <constraint firstAttribute="trailing" secondItem="dFe-EW-ViO" secondAttribute="trailing" id="SNk-6A-JHf"/>
+                            <constraint firstItem="dFe-EW-ViO" firstAttribute="leading" secondItem="ATR-i0-o7h" secondAttribute="leading" id="v1z-gZ-5My"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Driver" id="HKH-8I-XcO">
                         <barButtonItem key="leftBarButtonItem" title="Menu" id="aac-Sa-Tvb">
@@ -351,6 +371,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="bottomButton" destination="dFe-EW-ViO" id="YpL-Qj-fW4"/>
                         <segue destination="74u-xh-HZd" kind="show" identifier="carInfoSegue" id="XfV-uI-wqQ"/>
                     </connections>
                 </viewController>

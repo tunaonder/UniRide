@@ -45,9 +45,12 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     
     var camera: GMSCameraPosition?
     
-    
     //Get the screen size of the device
     let screenSize: CGRect = UIScreen.mainScreen().bounds
+    
+    var resultsViewController: GMSAutocompleteResultsViewController?
+    var searchController: UISearchController!
+    var resultView: UITextView?
     
     var startMarker: GMSMarker!
     var destMarker1: GMSMarker!
@@ -66,9 +69,7 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
     var favListButton: UIButton!
     var addFavButton: UIButton!
     
-    var resultsViewController: GMSAutocompleteResultsViewController?
-    var searchController: UISearchController!
-    var resultView: UITextView?
+    
     
     
     

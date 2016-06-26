@@ -41,7 +41,7 @@ class DriverContainerViewController: UIViewController,DriverMainViewControllerDe
     var driverMenuViewController: DriverMenuViewController!
     
     // This defines how much the center view will show on the right when the menu is shown on the left.
-    let centerPanelExpandedOffset: CGFloat = 80
+    let centerPanelExpandedOffset: CGFloat = 150
     
     /*
      -----------------------
@@ -162,7 +162,15 @@ class DriverContainerViewController: UIViewController,DriverMainViewControllerDe
             animateCenterPanelXPosition(targetPosition: CGRectGetWidth(driverMainNavigationController.view.frame) - centerPanelExpandedOffset)
         } else {
             animateCenterPanelXPosition(targetPosition: 0) { finished in
+            
                 self.currentState = .DriverMenuCollapsed
+                
+                //When menu is collapsed, let the scrool gesture work again
+                self.driverMainViewController.mapView.settings.scrollGestures = true
+                
+                //When Menu is Collapsed, consumes gestures in the map
+                //So that menu cannot be expanded with the gesture left to right
+                self.driverMainViewController.mapView.settings.consumesGesturesInView = true
             }
         }
     }
