@@ -19,6 +19,13 @@ protocol DriverMainViewControllerDelegate {
     optional func collapseMenuView()
 }
 
+enum DriverState{
+    case setStartState
+    case setDestinationState
+    case goState
+    case cancelState
+}
+
 class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMSMapViewDelegate, DriverMenuViewControllerDelegate {
     
     /*
@@ -41,7 +48,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
     var resultsViewController: GMSAutocompleteResultsViewController?
     var searchController: UISearchController!
     var resultView: UITextView?
-
+    
     var myThemeColor: UIColor = UIColor(red: 101/255.0, green: 179/255.0, blue: 234/255.0, alpha: 1.0)
     
     //View Components
@@ -49,17 +56,40 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
     var centerImage: UIImageView!
     var searchSubView: UIView!
     
-    //Current Location Coordinates
+    var startMarker: GMSMarker!
+    var destMarker: GMSMarker!
+    
+    //Set Driver State
+    var driverState: DriverState = .setStartState
+    
+    //Vars
     var long: Double = 0
     var lat: Double = 0
     var markerLat: Double = 0
     var markerLong: Double = 0
+    var startLatitude = Double()
+    var startLongitude = Double()
+    var destinationLatitude = Double()
+    var destinationLongitude = Double()
+    var startAddress: String = ""
+    var mapAlreadyLoaded: Bool = false
+    //Route Origin and Destination
+    var origin = String()
+    var destination = String()
+    
     //TEMP
     let bilkentLatitude = 39.866826
     let bilkentLongitude = 32.747355
     
-    var mapAlreadyLoaded: Bool = false
-    
+    //Draw Route Components
+    var mapTasks = DriverMapTasks()
+    //Contains Route Data
+    var routeData: String = ""
+    var routePolyline: GMSPolyline!
+    var coordinatesArray = [Double]()
+    var originMarker: GMSMarker!
+    var coordinatesArray2D = [CLLocationCoordinate2D]()
+    var waypoints = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -258,6 +288,84 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
         
     }
     
+    /*
+     -------------------------
+     MARK: - Button Actions
+     -------------------------
+     */
+    
+    @IBAction func bottomButtonPressed(sender: AnyObject) {
+        
+        switch(driverState){
+        case .setStartState:
+            
+            bottomButton.setTitle("Set Destination!", forState: .Normal)
+            
+            let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
+            startLatitude = markerLat
+            startLongitude = markerLong
+            startMarker = GMSMarker(position: position)
+            startMarker.icon = UIImage(named: "start-flag")
+            startMarker.map = mapView
+            
+            centerImage.image = UIImage(named: "destination-icon")
+            
+            //Change the State
+            driverState = .setDestinationState
+            
+            //Set the address
+            startAddress = (searchController?.searchBar.text)!
+            
+        case .setDestinationState:
+            bottomButton.setTitle("Go!", forState: .Normal)
+            
+            //Add Marker
+            let position = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLong)
+            destMarker = GMSMarker(position: position)
+            destMarker.icon = UIImage(named: "dest-flag")
+            destMarker.map = mapView
+            
+            destinationLatitude = markerLat
+            destinationLongitude = markerLong
+            
+            centerImage.hidden = true
+            
+            
+            drawRoute()
+            
+            //Change The State
+            driverState = .goState
+            
+        case .goState:
+            sendDriveRequest()
+            
+            bottomButton.setTitle("Cancel!", forState: .Normal)
+            bottomButton.backgroundColor = UIColor.redColor()
+            
+            //Change The State
+            driverState = .cancelState
+            
+            
+            
+
+            
+        case .cancelState:
+             mapView.clear()
+            
+             bottomButton.backgroundColor = myThemeColor
+             bottomButton.setTitle("Set Start Location", forState: .Normal)
+            
+             centerImage.hidden = false
+             centerImage.image = UIImage(named: "start-icon")
+             
+             //Change the state
+             driverState = .setStartState
+            
+            
+        }
+        
+        
+    }
     
     @IBAction func menuButtonTapped(sender: AnyObject) {
         //When menu is displayed, enable gestures to drag the menu to the left
@@ -278,7 +386,89 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
         delegate?.collapseMenuView!()
         
         performSegueWithIdentifier("carInfoSegue", sender: self)
-    } 
+    }
+    
+    func sendDriveRequest(){
+        
+    }
+    
+    func drawRoute(){
+        origin = "\(startLatitude),\(startLongitude)"
+        destination = "\(destinationLatitude),\(destinationLongitude)"
+        
+        self.mapTasks.getDirections(origin, destination: destination, waypoints: nil, travelMode: nil, completionHandler: { (status, success) -> Void in
+            if success {
+                
+                // self.configureMapAndMarkersForRoute()
+                self.drawOnTheMap()
+                self.putMarkers()
+                // self.displayRouteInfo()
+            }
+            else {
+                print(status)
+            }
+        })
+
+    }
+    
+    func drawOnTheMap() {
+        routeData = mapTasks.overviewPolyline["points"] as! String
+        
+        
+        let path: GMSPath = GMSPath(fromEncodedPath: routeData)!
+        routePolyline = GMSPolyline(path: path)
+        routePolyline.map = mapView
+    }
+    
+    func putMarkers(){
+        /*        stepCoordinates = mapTasks.stepCoordinates
+         for stepCoordinate in stepCoordinates{
+         originMarker = GMSMarker(position: stepCoordinate)
+         originMarker.map = self.mapView
+         originMarker.icon = GMSMarker.markerImageWithColor(UIColor.blueColor())
+         }*/
+        
+        coordinatesArray = mapTasks.coordinatesArray
+        
+        
+        for var i = 0; i<coordinatesArray.count-1; i = i+2 {
+            //Only DestinationPont Marker. Temporary
+            //if (i == coordinatesArray.count-2){
+       /*     let x = coordinatesArray[i]
+            let y = coordinatesArray[i+1]
+            
+            let location = CLLocationCoordinate2D(latitude: x, longitude: y)
+            
+            originMarker = GMSMarker(position: location)
+            originMarker.map = self.mapView
+            originMarker.icon = GMSMarker.markerImageWithColor(UIColor.blueColor())
+            //  }
+            
+            
+            */
+            
+        }
+        
+                coordinatesArray2D = mapTasks.coordinatesArray2D
+         
+         for var i = 0; i<coordinatesArray2D.count; i = i+1 {
+         
+         
+         let location = coordinatesArray2D[i]
+         
+         originMarker = GMSMarker(position: location)
+         originMarker.map = self.mapView
+         originMarker.icon = GMSMarker.markerImageWithColor(UIColor.redColor())
+         
+         
+         
+         
+         
+         }
+        
+        
+        
+    }
     
 }
 
@@ -286,10 +476,6 @@ extension DriverMainViewController: GMSAutocompleteResultsViewControllerDelegate
     func resultsController(resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWithPlace place: GMSPlace) {
         searchController.active = false
-        // Do something with the selected place.
-        // print("Place name: ", place.name)
-        // print("Place address: ", place.formattedAddress)
-        // print("Place attributions: ", place.attributions)
         
         let location: CLLocationCoordinate2D = CLLocationCoordinate2DMake(place.coordinate.latitude, place.coordinate.longitude)
         

@@ -17,7 +17,6 @@ class AddressFinder{
         let json = try! NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary
         if let result = json["results"] as? NSArray {
             if let address = result[0]["address_components"]! as? NSArray {
-                print(address)
                 let number = address[0]["short_name"]! as! String
                 let street = address[1]["long_name"]! as! String
                 let city = address[2]["short_name"]! as! String

@@ -32,6 +32,8 @@
 		B08E302B1D0705E100E99A03 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B08E302A1D0705E100E99A03 /* Assets.xcassets */; };
 		B08E302D1D071C4B00E99A03 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08E302C1D071C4B00E99A03 /* MenuViewController.swift */; };
 		B08E302F1D07223800E99A03 /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B08E302E1D07223800E99A03 /* ContainerViewController.swift */; };
+		B090496B1D2062F10006072F /* DriverMapTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B090496A1D2062F10006072F /* DriverMapTasks.swift */; };
+		B090496D1D20633E0006072F /* Polyline.swift in Sources */ = {isa = PBXBuildFile; fileRef = B090496C1D20633E0006072F /* Polyline.swift */; };
 		B0988B621D1DCD7900E827A3 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0988B611D1DCD7900E827A3 /* AlertView.swift */; };
 		B0A1EE751D14499E00A60BF1 /* AddressFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0A1EE741D14499E00A60BF1 /* AddressFinder.swift */; };
 		B0B790E51D06CF6B00336CDA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0B790E41D06CF6B00336CDA /* AppDelegate.swift */; };
@@ -89,6 +91,8 @@
 		B08E302A1D0705E100E99A03 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B08E302C1D071C4B00E99A03 /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		B08E302E1D07223800E99A03 /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		B090496A1D2062F10006072F /* DriverMapTasks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DriverMapTasks.swift; sourceTree = "<group>"; };
+		B090496C1D20633E0006072F /* Polyline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Polyline.swift; sourceTree = "<group>"; };
 		B0988B611D1DCD7900E827A3 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		B0A1EE741D14499E00A60BF1 /* AddressFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressFinder.swift; sourceTree = "<group>"; };
 		B0B790E11D06CF6B00336CDA /* UniRide.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UniRide.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -231,6 +235,8 @@
 				B0A1EE741D14499E00A60BF1 /* AddressFinder.swift */,
 				B0F0340F1D089F0500702B55 /* Animate.swift */,
 				B0988B611D1DCD7900E827A3 /* AlertView.swift */,
+				B090496A1D2062F10006072F /* DriverMapTasks.swift */,
+				B090496C1D20633E0006072F /* Polyline.swift */,
 				B0B790E81D06CF6B00336CDA /* Main.storyboard */,
 				B08E302A1D0705E100E99A03 /* Assets.xcassets */,
 				B0B790ED1D06CF6B00336CDA /* LaunchScreen.storyboard */,
@@ -471,6 +477,8 @@
 				B0811D091D10520C002A3F42 /* UserSignupViewController.swift in Sources */,
 				B0811CFE1D104E0D002A3F42 /* RiderMatchesViewController.swift in Sources */,
 				B0F034101D089F0500702B55 /* Animate.swift in Sources */,
+				B090496D1D20633E0006072F /* Polyline.swift in Sources */,
+				B090496B1D2062F10006072F /* DriverMapTasks.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

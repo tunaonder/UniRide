@@ -714,10 +714,6 @@ extension RiderMainViewController: GMSAutocompleteResultsViewControllerDelegate 
     func resultsController(resultsController: GMSAutocompleteResultsViewController,
                            didAutocompleteWithPlace place: GMSPlace) {
         searchController.active = false
-        // Do something with the selected place.
-       // print("Place name: ", place.name)
-       // print("Place address: ", place.formattedAddress)
-       // print("Place attributions: ", place.attributions)
         
         let location: CLLocationCoordinate2D = CLLocationCoordinate2DMake(place.coordinate.latitude, place.coordinate.longitude)
         

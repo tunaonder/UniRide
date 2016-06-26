@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "UniRide/RiderViewControllers/RiderMainViewController.swift"
-            timestampString = "488646751.466542"
+            timestampString = "488650991.497675"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "854"
-            endingLineNumber = "854">
+            startingLineNumber = "850"
+            endingLineNumber = "850">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

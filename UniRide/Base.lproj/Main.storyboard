@@ -351,6 +351,7 @@
                                 </state>
                                 <connections>
                                     <action selector="bottomButtonPressed:" destination="efy-9b-4BO" eventType="touchUpInside" id="0uy-W0-jng"/>
+                                    <action selector="bottomButtonPressed:" destination="s4r-6F-3ef" eventType="touchUpInside" id="EIc-IM-3jp"/>
                                 </connections>
                             </button>
                         </subviews>
