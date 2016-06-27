@@ -88,7 +88,6 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
     var routePolyline: GMSPolyline!
     var coordinatesArray = [Double]()
     var originMarker: GMSMarker!
-    var coordinatesArray2D = [CLLocationCoordinate2D]()
     var waypoints = [String]()
     
     override func viewDidLoad() {
@@ -360,6 +359,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
              //Clear Coordinates Array
              coordinatesArray.removeAll()
              mapTasks.coordinatesArray.removeAll()
+             mapTasks.stepDistances.removeAll()
              
              //Change the state
              driverState = .setStartState
@@ -433,12 +433,34 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
         
         coordinatesArray = mapTasks.coordinatesArray
         
+        print(coordinatesArray.count)
+        print(mapTasks.stepDistances.count)
         
-        for var i = 0; i<coordinatesArray.count-1; i = i+2 {
+        for i in 0 ..< mapTasks.stepDistances.count{
+            
+            print (mapTasks.stepDistances[i])
+            
+            let x = coordinatesArray[2*i]
+            let y = coordinatesArray[2*i+1]
+            
+            let location = CLLocationCoordinate2D(latitude: x, longitude: y)
+            
+            originMarker = GMSMarker(position: location)
+            originMarker.map = self.mapView
+            originMarker.icon = GMSMarker.markerImageWithColor(UIColor.blueColor())
+
+            
+        }
+        
+        print("-----")
+        
+        
+      /*   for var i = 0; i<coordinatesArray.count-1; i = i+2 {
             //Only DestinationPont Marker. Temporary
             //if (i == coordinatesArray.count-2){
             let x = coordinatesArray[i]
             let y = coordinatesArray[i+1]
+            print(mapTasks.stepDistances[i/2])
             
             let location = CLLocationCoordinate2D(latitude: x, longitude: y)
             
@@ -452,7 +474,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             
         }
         
-       /*         coordinatesArray2D = mapTasks.coordinatesArray2D
+               coordinatesArray2D = mapTasks.coordinatesArray2D
          
          for var i = 0; i<coordinatesArray2D.count; i = i+1 {
          
@@ -472,6 +494,45 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
         
         
     }
+    
+    /*
+     -------------------------
+     MARK: - Send Request to Server
+     -------------------------
+     */
+    
+    /*func sendDriverRequest(destination: String){
+        
+        let driverRequest = PFObject(className: "DriverRequest")
+        
+        driverRequest["user"] = PFUser.currentUser()
+        driverRequest["coords"] = coordinatesArray
+        let pickUpCoords = [pickUpLatitude, pickUpLongitude]
+        riderRequest["pickUpCoords"] = pickUpCoords
+        let destinationCoords = [markerLat, markerLong]
+        riderRequest["destinationCoords"] = destinationCoords
+        riderRequest["pickUpAddress"] = pickUpAddress
+        riderRequest["destinationAddress"] = destination
+        
+        riderRequest.saveInBackgroundWithBlock { (success, error) -> Void in
+            
+            if error == nil {
+                
+                AlertView().displayAlert("Your Ride Request from \(self.pickUpAddress) to \(destination) is Sent!", message: "Waiting for Available Drivers.", view: self)
+                
+                
+                
+            }
+                
+            else{
+                print(error)
+                
+                
+            }
+            
+        }
+        
+    }*/
     
 }
 

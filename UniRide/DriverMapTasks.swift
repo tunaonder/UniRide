@@ -45,7 +45,7 @@ class DriverMapTasks: NSObject  {
     var stepCoordinates = [CLLocationCoordinate2D]()
     
     var coordinatesArray = [Double]()
-    var coordinatesArray2D = [CLLocationCoordinate2D]()
+    var stepDistances = [Double]()
     
     
     var totalDistanceInMeters: UInt = 0
@@ -127,6 +127,7 @@ class DriverMapTasks: NSObject  {
                                     let distanceValue = distance["value"] as! Double
                                     
                                     var decryptionNecassary = Bool()
+                                    var coordinateSystemDistance = Double()
                                     
                                     //If a step is short do not need to decrypt the coordinates,
                                     //because all points close enough to corners will be checked in server
@@ -149,7 +150,7 @@ class DriverMapTasks: NSObject  {
                                         let stepEndLocation:CLLocation = CLLocation(latitude: x2, longitude: y2)
                                         
                                         //Perpendicular Distance of step head and step end
-                                        let coordinateSystemDistance:CLLocationDistance = stepHeadLocation.distanceFromLocation(stepEndLocation)
+                                        coordinateSystemDistance = stepHeadLocation.distanceFromLocation(stepEndLocation)
                                         //   print("Coordinate System Distance: \(coordinateSystemDistance)")
                                         
                                         //Checks if step is straight enough
@@ -167,29 +168,33 @@ class DriverMapTasks: NSObject  {
                                         //Divide step into 5 (array consists of x and y pairs)
                                         let coefficient: Int = decodedStep.count/10
                                         
-                                        for i in 0 ..< 5 {
+                                        
+                                        //Initial Point Is Already Added
+                                        self.coordinatesArray.append(decodedStep[0])
+                                        self.coordinatesArray.append(decodedStep[1])
+                                        
+                                        
+                                        for i in 0 ..< 4 {
                                             
-                                            //If no point is added before, add directly
-                                            if (self.coordinatesArray.count == 0){
-                                                self.coordinatesArray.append(decodedStep[i*coefficient*2])
-                                                self.coordinatesArray.append(decodedStep[i*coefficient*2+1])
-                                            }
-                                                //Compare the distance between the last location and recently decoded
-                                                //location. If the distance is shorter than the corner distance, do not add this point.
-                                            else {
-                                                let point1:CLLocation = CLLocation(latitude: decodedStep[i*coefficient*2], longitude: decodedStep[i*coefficient*2+1])
-                                                //Location of last added point
-                                                let point2:CLLocation = CLLocation(latitude: self.coordinatesArray[self.coordinatesArray.count-2], longitude: self.coordinatesArray[self.coordinatesArray.count-1])
-                                                
-                                                let pointsDistance: Double = point1.distanceFromLocation(point2) as Double
-                                                
-                                                //If there is enough distance then add new location to the coordinates array
-                                                if (pointsDistance > self.cornerDistance){
-                                                    self.coordinatesArray.append(decodedStep[i*coefficient*2])
-                                                    self.coordinatesArray.append(decodedStep[i*coefficient*2+1])
+                                            //Compare the distance between the last location and recently decoded
+                                            //location. If the distance is shorter than the corner distance, do not add this point.
+                                            
+                                            //Location of last added point
+                                            let point1:CLLocation = CLLocation(latitude: self.coordinatesArray[self.coordinatesArray.count-2], longitude: self.coordinatesArray[self.coordinatesArray.count-1])
+                                            
+                                            let point2:CLLocation = CLLocation(latitude: decodedStep[(i+1)*coefficient*2], longitude: decodedStep[(i+1)*coefficient*2+1])
+                                            
+                                            
+                                            let pointsDistance: Double = point1.distanceFromLocation(point2) as Double
+                                            
+                                            //If there is enough distance then add new location to the coordinates array
+                                            if (pointsDistance > self.cornerDistance){
+                                                if (i != 3){
+                                                    self.coordinatesArray.append(decodedStep[(i+1)*coefficient*2])
+                                                    self.coordinatesArray.append(decodedStep[(i+1)*coefficient*2+1])
                                                 }
+                                                self.stepDistances.append(pointsDistance)
                                             }
-                                            
                                             
                                             
                                         }
@@ -198,6 +203,7 @@ class DriverMapTasks: NSObject  {
                                     else {
                                         self.coordinatesArray.append(x)
                                         self.coordinatesArray.append(y)
+                                        self.stepDistances.append(distanceValue)
                                     }
                                     
                                     
@@ -212,6 +218,29 @@ class DriverMapTasks: NSObject  {
                             let y = endLocationDictionary["lng"] as! Double
                             self.coordinatesArray.append(x)
                             self.coordinatesArray.append(y)
+                            
+                            
+                        /*    if (self.stepDistances.count != self.coordinatesArray.count/2-1){
+                                let point1:CLLocation = CLLocation(latitude: self.coordinatesArray[self.coordinatesArray.count-4], longitude: self.coordinatesArray[self.coordinatesArray.count-3])
+                                let point2:CLLocation = CLLocation(latitude: x, longitude: y)
+                                
+                                let pointsDistance: Double = point1.distanceFromLocation(point2) as Double
+                                
+                                
+                                
+                                self.stepDistances.append(pointsDistance)
+                            } */
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
                             ///////
                             
                             
