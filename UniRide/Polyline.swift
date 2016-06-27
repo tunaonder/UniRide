@@ -162,6 +162,7 @@ public func decodePolyline(encodedPolyline: String, precision: Double = 1e5) -> 
     var position = Int(0)
     
     var decodedCoordinates = [CLLocationCoordinate2D]()
+
     
     var lat = 0.0
     var lon = 0.0
@@ -182,6 +183,38 @@ public func decodePolyline(encodedPolyline: String, precision: Double = 1e5) -> 
     }
     
     return decodedCoordinates
+}
+
+public func decodeToCoordinates(encodedPolyline: String, precision: Double = 1e5) -> [Double]? {
+    
+    let data = encodedPolyline.dataUsingEncoding(NSUTF8StringEncoding)!
+    
+    let byteArray = unsafeBitCast(data.bytes, UnsafePointer<Int8>.self)
+    let length = Int(data.length)
+    var position = Int(0)
+    
+    var coordinates = [Double]()
+    
+    var lat = 0.0
+    var lon = 0.0
+    
+    while position < length {
+        
+        do {
+            let resultingLat = try decodeSingleCoordinate(byteArray: byteArray, length: length, position: &position, precision: precision)
+            lat += resultingLat
+            
+            let resultingLon = try decodeSingleCoordinate(byteArray: byteArray, length: length, position: &position, precision: precision)
+            lon += resultingLon
+        } catch {
+            return nil
+        }
+        
+        coordinates.append(lat)
+        coordinates.append(lon)
+    }
+    
+    return coordinates
 }
 
 /// This function decodes a String to a [CLLocation]?

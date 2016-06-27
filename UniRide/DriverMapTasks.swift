@@ -40,6 +40,8 @@ class DriverMapTasks: NSObject  {
     var steps = Array<Dictionary<NSObject, AnyObject>>!()
     
     //ALL COORDINATES
+    var cornerDistance: Double = 50
+    var maxDistance: Double = 1500
     var stepCoordinates = [CLLocationCoordinate2D]()
     
     var coordinatesArray = [Double]()
@@ -95,16 +97,17 @@ class DriverMapTasks: NSObject  {
                         
                         if status == "OK" {
                             self.selectedRoute = (dictionary["routes"] as! Array<Dictionary<NSObject, AnyObject>>)[0]
+                            
                             self.overviewPolyline = self.selectedRoute["overview_polyline"] as! Dictionary<NSObject, AnyObject>
                             
                             
                             let legs = self.selectedRoute["legs"] as! Array<Dictionary<NSObject, AnyObject>>
                             
                             
-                            let startLocationDictionary = legs[0]["start_location"] as! Dictionary<NSObject, AnyObject>
-                            
-                            
-                            self.originCoordinate = CLLocationCoordinate2DMake(startLocationDictionary["lat"] as! Double, startLocationDictionary["lng"] as! Double)
+                            /*    let startLocationDictionary = legs[0]["start_location"] as! Dictionary<NSObject, AnyObject>
+                             
+                             
+                             self.originCoordinate = CLLocationCoordinate2DMake(startLocationDictionary["lat"] as! Double, startLocationDictionary["lng"] as! Double)*/
                             
                             
                             let endLocationDictionary = legs[legs.count - 1]["end_location"] as! Dictionary<NSObject, AnyObject>
@@ -115,77 +118,96 @@ class DriverMapTasks: NSObject  {
                                 let steps = leg["steps"] as! Array<Dictionary<NSObject, AnyObject>>
                                 for step in steps{
                                     
-                                    let startLocations = step["start_location"] as! Dictionary<NSObject, AnyObject>
-                                    /*       self.tempCoordinate = CLLocationCoordinate2DMake(startLocations["lat"] as! Double, startLocations["lng"] as! Double)
-                                     if let coordinate = self.tempCoordinate {
-                                     self.stepCoordinates.append(coordinate)
-                                     
-                                     }*/
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    ////////
-                                    let x = startLocations["lat"] as! Double
-                                    let y = startLocations["lng"] as! Double
-                                    self.coordinatesArray.append(x)
-                                    self.coordinatesArray.append(y)
-                                    
-                                    
-                                    
+                                    let stepHead = step["start_location"] as! Dictionary<NSObject, AnyObject>
+                                    let x = stepHead["lat"] as! Double
+                                    let y = stepHead["lng"] as! Double
                                     
                                     //Calculate Step DISTANCE from google maps!
                                     let distance = step["distance"] as! Dictionary<NSObject, AnyObject>
                                     let distanceValue = distance["value"] as! Double
-                                    print("Step distance: \(distanceValue)")
                                     
-                                    let stepEndDic = step["end_location"] as! Dictionary<NSObject, AnyObject>
+                                    var decryptionNecassary = Bool()
                                     
+                                    //If a step is short do not need to decrypt the coordinates,
+                                    //because all points close enough to corners will be checked in server
+                                    if (distanceValue < self.cornerDistance){
+                                        decryptionNecassary = false
+                                    }
+                                    else if ( distanceValue > self.maxDistance ){
+                                        decryptionNecassary = true
+                                    }
+                                    else{
+                                        let stepEnd = step["end_location"] as! Dictionary<NSObject, AnyObject>
+                                        let x2 = stepEnd["lat"] as! Double
+                                        let y2 = stepEnd["lng"] as! Double
+                                        
+                                        
+                                        //    print("Step distance: \(distanceValue)")
+                                        
+                                        
+                                        let stepHeadLocation:CLLocation = CLLocation(latitude: x, longitude: y)
+                                        let stepEndLocation:CLLocation = CLLocation(latitude: x2, longitude: y2)
+                                        
+                                        //Perpendicular Distance of step head and step end
+                                        let coordinateSystemDistance:CLLocationDistance = stepHeadLocation.distanceFromLocation(stepEndLocation)
+                                        //   print("Coordinate System Distance: \(coordinateSystemDistance)")
+                                        
+                                        //Checks if step is straight enough
+                                        decryptionNecassary = self.shoulBeDecrypted(distanceValue, coordinateDistance: coordinateSystemDistance)
+                                    }
                                     
-                                    let x2 = stepEndDic["lat"] as! Double
-                                    let y2 = stepEndDic["lng"] as! Double
+                                    if decryptionNecassary {
+                                        //DECRYPTION-----------------
+                                        let polyline = step["polyline"] as! Dictionary<NSObject, AnyObject>
+                                        let encryptedString = polyline["points"] as! String
+                                        
+                                        let decodedStep: [Double] = decodeToCoordinates(encryptedString)!
+                                        
+                                        
+                                        //Divide step into 5 (array consists of x and y pairs)
+                                        let coefficient: Int = decodedStep.count/10
+                                        
+                                        for i in 0 ..< 5 {
+                                            
+                                            //If no point is added before, add directly
+                                            if (self.coordinatesArray.count == 0){
+                                                self.coordinatesArray.append(decodedStep[i*coefficient*2])
+                                                self.coordinatesArray.append(decodedStep[i*coefficient*2+1])
+                                            }
+                                                //Compare the distance between the last location and recently decoded
+                                                //location. If the distance is shorter than the corner distance, do not add this point.
+                                            else {
+                                                let point1:CLLocation = CLLocation(latitude: decodedStep[i*coefficient*2], longitude: decodedStep[i*coefficient*2+1])
+                                                //Location of last added point
+                                                let point2:CLLocation = CLLocation(latitude: self.coordinatesArray[self.coordinatesArray.count-2], longitude: self.coordinatesArray[self.coordinatesArray.count-1])
+                                                
+                                                let pointsDistance: Double = point1.distanceFromLocation(point2) as Double
+                                                
+                                                //If there is enough distance then add new location to the coordinates array
+                                                if (pointsDistance > self.cornerDistance){
+                                                    self.coordinatesArray.append(decodedStep[i*coefficient*2])
+                                                    self.coordinatesArray.append(decodedStep[i*coefficient*2+1])
+                                                }
+                                            }
+                                            
+                                            
+                                            
+                                        }
+                                        
+                                    }
+                                    else {
+                                        self.coordinatesArray.append(x)
+                                        self.coordinatesArray.append(y)
+                                    }
                                     
-                                    let stepHead:CLLocation = CLLocation(latitude: x, longitude: y)
-                                    let stepEnd:CLLocation = CLLocation(latitude: x2, longitude: y2)
-                                    
-                                    //Perpendicular Distance of step head and step end
-                                    let coordinateSystemDistance:CLLocationDistance = stepHead.distanceFromLocation(stepEnd)
-                                    print("Coordinate System Distance: \(coordinateSystemDistance)")
-                                    
-                                    
-                                    
-                                    //DECRYPTION-----------------
-                                    let polyline = step["polyline"] as! Dictionary<NSObject, AnyObject>
-                                    let encryptedString = polyline["points"] as! String
-                                    
-                                    
-                                    
-                                    //  var stepCoordinates = [CLLocationCoordinate2D]()
-                                    //  var poly = Polyline.init(encodedPolyline: encryptedString)
-                                    
-                                    self.coordinatesArray2D.appendContentsOf(decodePolyline(encryptedString)!)
-                                    //     print("length=\(stepCoordinates.count)")
-                                    //      print(stepCoordinates[stepCoordinates.count-1])
-                                    
-                                    
-                                    //---------------------
                                     
                                     
                                 }
                                 
-                                
-                                
-                                
-                                
                             }
                             
-                            // self.stepCoordinates.append(self.destinationCoordinate)
                             
-                            
-                            
-                            
-                            //////
+                            //////Destination Location
                             let x = endLocationDictionary["lat"] as! Double
                             let y = endLocationDictionary["lng"] as! Double
                             self.coordinatesArray.append(x)
@@ -199,7 +221,7 @@ class DriverMapTasks: NSObject  {
                             //    print(self.originAddress)
                             //    print(self.destinationAddress)
                             
-                            self.calculateTotalDistanceAndDuration()
+                            // self.calculateTotalDistanceAndDuration()
                             
                             completionHandler(status: status, success: true)
                         }
@@ -259,6 +281,20 @@ class DriverMapTasks: NSObject  {
         let remainingSecs = totalDurationInSeconds % 60
         
         totalDuration = "Duration: \(days) d, \(remainingHours) h, \(remainingMins) mins, \(remainingSecs) secs"
+    }
+    
+    
+    func shoulBeDecrypted(realDistance: Double, coordinateDistance: Double) -> Bool {
+        
+        //This means that route is not straight enough
+        if (realDistance * 0.95 > coordinateDistance) {
+            return true
+        }
+        
+        return false
+        
+        
+        
     }
     
     

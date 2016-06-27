@@ -270,6 +270,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
         
         
     }
+
     
     //Coordinates of Center Of the map change when camera moves
     func mapView(mapView: GMSMapView, didChangeCameraPosition camera: GMSCameraPosition) {
@@ -279,14 +280,12 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
     }
     
     //Update Address when Map becomes stable
-    func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
+  /*  func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
         
         (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
+ 
         
-        
-        
-        
-    }
+    } */
     
     /*
      -------------------------
@@ -357,6 +356,10 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             
              centerImage.hidden = false
              centerImage.image = UIImage(named: "start-icon")
+             
+             //Clear Coordinates Array
+             coordinatesArray.removeAll()
+             mapTasks.coordinatesArray.removeAll()
              
              //Change the state
              driverState = .setStartState
@@ -434,7 +437,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
         for var i = 0; i<coordinatesArray.count-1; i = i+2 {
             //Only DestinationPont Marker. Temporary
             //if (i == coordinatesArray.count-2){
-       /*     let x = coordinatesArray[i]
+            let x = coordinatesArray[i]
             let y = coordinatesArray[i+1]
             
             let location = CLLocationCoordinate2D(latitude: x, longitude: y)
@@ -445,11 +448,11 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             //  }
             
             
-            */
+            
             
         }
         
-                coordinatesArray2D = mapTasks.coordinatesArray2D
+       /*         coordinatesArray2D = mapTasks.coordinatesArray2D
          
          for var i = 0; i<coordinatesArray2D.count; i = i+1 {
          
@@ -461,10 +464,10 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
          originMarker.icon = GMSMarker.markerImageWithColor(UIColor.redColor())
          
          
+ 
          
          
-         
-         }
+         }*/
         
         
         
