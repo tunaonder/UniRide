@@ -438,7 +438,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
         
         for i in 0 ..< mapTasks.stepDistances.count{
             
-            print (mapTasks.stepDistances[i])
+        //    print (mapTasks.stepDistances[i])
             
             let x = coordinatesArray[2*i]
             let y = coordinatesArray[2*i+1]

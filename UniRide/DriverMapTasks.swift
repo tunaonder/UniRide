@@ -104,7 +104,7 @@ class DriverMapTasks: NSObject  {
                             let legs = self.selectedRoute["legs"] as! Array<Dictionary<NSObject, AnyObject>>
                             
                             
-                            /*    let startLocationDictionary = legs[0]["start_location"] as! Dictionary<NSObject, AnyObject>
+                             /*    let startLocationDictionary = legs[0]["start_location"] as! Dictionary<NSObject, AnyObject>
                              
                              
                              self.originCoordinate = CLLocationCoordinate2DMake(startLocationDictionary["lat"] as! Double, startLocationDictionary["lng"] as! Double)*/
@@ -188,13 +188,13 @@ class DriverMapTasks: NSObject  {
                                             let pointsDistance: Double = point1.distanceFromLocation(point2) as Double
                                             
                                             //If there is enough distance then add new location to the coordinates array
-                                            if (pointsDistance > self.cornerDistance){
+                                         //   if (pointsDistance > self.cornerDistance){
                                                 if (i != 3){
                                                     self.coordinatesArray.append(decodedStep[(i+1)*coefficient*2])
                                                     self.coordinatesArray.append(decodedStep[(i+1)*coefficient*2+1])
                                                 }
                                                 self.stepDistances.append(pointsDistance)
-                                            }
+                                         //    }
                                             
                                             
                                         }
