@@ -501,15 +501,16 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
      -------------------------
      */
     
-    /*func sendDriverRequest(destination: String){
+    func sendDriverRequest(destination: String){
         
         let driverRequest = PFObject(className: "DriverRequest")
         
         driverRequest["user"] = PFUser.currentUser()
         driverRequest["coords"] = coordinatesArray
-        let pickUpCoords = [pickUpLatitude, pickUpLongitude]
-        riderRequest["pickUpCoords"] = pickUpCoords
-        let destinationCoords = [markerLat, markerLong]
+        driverRequest["distances"] = mapTasks.stepDistances
+        let startCoords = [startLatitude, startLongitude]
+        driverRequest["startCoords"] = startCoords
+        let destinationCoords = [destinationLatitude, destinationLongitude]
         riderRequest["destinationCoords"] = destinationCoords
         riderRequest["pickUpAddress"] = pickUpAddress
         riderRequest["destinationAddress"] = destination
@@ -532,7 +533,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             
         }
         
-    }*/
+    }
     
 }
 
