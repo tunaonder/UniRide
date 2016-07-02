@@ -72,6 +72,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
     var destinationLatitude = Double()
     var destinationLongitude = Double()
     var startAddress: String = ""
+    var destinationAddress: String = ""
     var mapAlreadyLoaded: Bool = false
     //Route Origin and Destination
     var origin = String()
@@ -323,11 +324,12 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             destMarker.icon = UIImage(named: "dest-flag")
             destMarker.map = mapView
             
-            destinationLatitude = markerLat
-            destinationLongitude = markerLong
-            
             centerImage.hidden = true
             
+            destinationLatitude = markerLat
+            destinationLongitude = markerLong
+ 
+            destinationAddress = (searchController?.searchBar.text)!
             
             drawRoute()
             
@@ -335,7 +337,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             driverState = .goState
             
         case .goState:
-            sendDriveRequest()
+            sendDriverRequest()
             
             bottomButton.setTitle("Cancel!", forState: .Normal)
             bottomButton.backgroundColor = UIColor.redColor()
@@ -501,25 +503,23 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
      -------------------------
      */
     
-    func sendDriverRequest(destination: String){
+    func sendDriverRequest(){
         
         let driverRequest = PFObject(className: "DriverRequest")
         
         driverRequest["user"] = PFUser.currentUser()
         driverRequest["coords"] = coordinatesArray
         driverRequest["distances"] = mapTasks.stepDistances
-        let startCoords = [startLatitude, startLongitude]
-        driverRequest["startCoords"] = startCoords
-        let destinationCoords = [destinationLatitude, destinationLongitude]
-        riderRequest["destinationCoords"] = destinationCoords
-        riderRequest["pickUpAddress"] = pickUpAddress
-        riderRequest["destinationAddress"] = destination
+       // let startCoords = [startLatitude, startLongitude]
+       // driverRequest["startCoords"] = startCoords
+        driverRequest["startAddress"] = startAddress
+        driverRequest["destinationAddress"] = destinationAddress
         
-        riderRequest.saveInBackgroundWithBlock { (success, error) -> Void in
+        driverRequest.saveInBackgroundWithBlock { (success, error) -> Void in
             
             if error == nil {
                 
-                AlertView().displayAlert("Your Ride Request from \(self.pickUpAddress) to \(destination) is Sent!", message: "Waiting for Available Drivers.", view: self)
+                AlertView().displayAlert("Your Ride from \(self.startAddress) to \(self.destinationAddress) is Saved!", message: "Waiting for Rider Response", view: self)
                 
                 
                 
