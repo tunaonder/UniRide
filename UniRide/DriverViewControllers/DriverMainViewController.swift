@@ -280,12 +280,12 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
     }
     
     //Update Address when Map becomes stable
-  /*  func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
+    func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
         
         (searchController?.searchBar)!.text = " " + AddressFinder().getAddressForLatLng("\(markerLat)", longitude: "\(markerLong)")
  
         
-    } */
+    }
     
     /*
      -------------------------
@@ -365,6 +365,10 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
              
              //Change the state
              driverState = .setStartState
+            
+            //Cancel Request
+            
+            cancelDriverRequest()
             
             
         }
@@ -505,6 +509,28 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
     
     func sendDriverRequest(){
         
+        PFCloud.callFunctionInBackground("hello", withParameters:nil) {
+            (result: AnyObject?, error: NSError?) -> Void in
+            if error == nil {
+                
+                // result is "Hello world!"
+                print(result)
+                
+                
+            }
+        }
+        PFCloud.callFunctionInBackground("pushToAll", withParameters:nil) {
+            (result: AnyObject?, error: NSError?) -> Void in
+            if error == nil {
+                
+                // result is "Hello world!"
+                print(result)
+                
+                
+            }
+        }
+        
+        
         let driverRequest = PFObject(className: "DriverRequest")
         
         driverRequest["user"] = PFUser.currentUser()
@@ -533,6 +559,31 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             
         }
         
+    }
+    
+    func cancelDriverRequest(){
+        let query = PFQuery(className: "DriverRequest")
+        query.whereKey("user", equalTo: PFUser.currentUser()!)
+        
+        query.findObjectsInBackgroundWithBlock({ (objects: [PFObject]?, error) -> Void in
+            
+            if error == nil {
+                
+                if let objects = objects as [PFObject]! {
+                    
+                    for object in objects {
+                        
+                        object.deleteInBackground()
+                    }
+                }
+                
+                AlertView().displayAlert("Notification", message: "Your Request is Cancelled.", view: self)
+            } else {
+                
+                print(error)
+            }
+            
+        })
     }
     
 }

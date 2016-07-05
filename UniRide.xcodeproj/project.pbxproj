@@ -629,7 +629,7 @@
 				);
 				INFOPLIST_FILE = UniRide/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tunaonder.UniRide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tunaonder.uniride2016;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -647,7 +647,7 @@
 				);
 				INFOPLIST_FILE = UniRide/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.tunaonder.UniRide;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tunaonder.uniride2016;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
