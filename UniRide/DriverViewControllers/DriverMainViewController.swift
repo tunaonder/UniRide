@@ -514,7 +514,7 @@ class DriverMainViewController: UIViewController, CLLocationManagerDelegate, GMS
             if error == nil {
                 
                 // result is "Hello world!"
-                print(result)
+               // print(result)
                 
                 
             }

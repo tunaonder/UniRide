@@ -17,6 +17,8 @@ class StarterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+
 
         
     }
@@ -31,10 +33,11 @@ class StarterViewController: UIViewController {
         
         //If Current User is cached on the disk
         //PFUser.currentUser()?["name"] returns Optional("facebook name of the user")
+        
         if PFUser.currentUser()?["name"] != nil {
             
             PFUser.currentUser()!.fetchInBackgroundWithBlock({ (currentUser: PFObject?, error: NSError?) -> Void in
-               
+                
                 if (currentUser as? PFUser) != nil {
                     
                     if let userState =  PFUser.currentUser()!["signedUp"]{
@@ -57,11 +60,12 @@ class StarterViewController: UIViewController {
                     
                 }
             })
-     }
+        }
         else {
             print("First Time User")
             
         }
+
     }
 
     

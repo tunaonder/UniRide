@@ -126,10 +126,10 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         }            
         //TEMP
         else {
-            long = bilkentLongitude
-            lat = bilkentLatitude
-            mapLocationLoad()
-            mapAlreadyLoaded = true
+    //        long = bilkentLongitude
+    //        lat = bilkentLatitude
+    //        mapLocationLoad()
+    //        mapAlreadyLoaded = true
         }
         
         
@@ -704,6 +704,11 @@ class RiderMainViewController: UIViewController, CLLocationManagerDelegate, GMSM
         
     }
     
+    
+    
+    func locationManager(manager: CLLocationManager, didUpdateToLocation newLocation: CLLocation, fromLocation oldLocation: CLLocation) {
+        
+    }
     
     
     

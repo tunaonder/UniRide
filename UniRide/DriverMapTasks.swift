@@ -96,6 +96,7 @@ class DriverMapTasks: NSObject  {
                         let status = dictionary["status"] as! String
                         
                         if status == "OK" {
+                            //Select the first route
                             self.selectedRoute = (dictionary["routes"] as! Array<Dictionary<NSObject, AnyObject>>)[0]
                             
                             self.overviewPolyline = self.selectedRoute["overview_polyline"] as! Dictionary<NSObject, AnyObject>
