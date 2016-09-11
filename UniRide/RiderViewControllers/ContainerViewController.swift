@@ -85,7 +85,7 @@ class ContainerViewController: UIViewController, RiderMainViewControllerDelegate
          Create a UIPanGestureRecognizer object, which will call the handlePanGesture: method when the user pans (drags or slides)
          the riderMainNavigationController object. Store its object reference into local variable panGestureRecognizer.
          */
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "handlePanGesture:")
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(ContainerViewController.handlePanGesture(_:)))
         
         // Attach the pan gesture recognizer object to the riderMainNavigationController object.
         riderMainNavigationController.view.addGestureRecognizer(panGestureRecognizer)
